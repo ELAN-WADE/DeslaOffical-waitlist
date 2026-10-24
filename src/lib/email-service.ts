@@ -459,6 +459,23 @@ function reloadEnvFromDisk() {
   }
 }
 
+// Retrieves Brevo (Sendinblue) API key if configured
+export function getBrevoApiKey(): string | null {
+  reloadEnvFromDisk();
+  const key = process.env.BREVO_API_KEY || (process.env.SMTP_PASS?.startsWith('xkeysib-') ? process.env.SMTP_PASS : null);
+  if (key && key.trim()) {
+    return key.trim();
+  }
+  return null;
+}
+
+// Retrieves safe sender object for Brevo
+export function getBrevoSender(): { name: string; email: string } {
+  const customEmail = process.env.BREVO_FROM_EMAIL || process.env.SMTP_USER || 'elanwadebrook@gmail.com';
+  const customName = process.env.BREVO_FROM_NAME || 'Desla Official';
+  return { name: customName, email: customEmail };
+}
+
 // Retrieves Resend API key if configured
 export function getResendApiKey(): string | null {
   reloadEnvFromDisk();
@@ -478,10 +495,10 @@ export function getResendFrom(): string {
   return 'Desla Official <onboarding@resend.dev>';
 }
 
-// Checks if live email dispatch credentials (Resend HTTPS or SMTP) are fully provided
+// Checks if live email dispatch credentials (Brevo HTTPS, Resend HTTPS, or SMTP) are fully provided
 export function isSmtpConfigured(): boolean {
   reloadEnvFromDisk();
-  if (getResendApiKey()) {
+  if (getBrevoApiKey() || getResendApiKey()) {
     return true;
   }
   const pass = process.env.SMTP_PASS?.replace(/\s+/g, '') || '';
@@ -498,8 +515,8 @@ export function isSmtpConfigured(): boolean {
 // Builds or retrieves cached nodemailer transport instance
 export function getMailTransport() {
   reloadEnvFromDisk();
-  if (getResendApiKey()) {
-    return null; // Resend uses direct HTTPS port 443 fetch
+  if (getBrevoApiKey() || getResendApiKey()) {
+    return null; // Brevo and Resend use direct HTTPS Port 443 fetch
   }
   if (!isSmtpConfigured()) {
     return null;
@@ -519,7 +536,7 @@ export function getMailTransport() {
   });
 }
 
-// Verifies email credentials (Resend HTTPS API or SMTP handshake)
+// Verifies email credentials (Brevo HTTPS API, Resend HTTPS API, or SMTP handshake)
 export async function verifySmtpConnection(): Promise<{
   configured: boolean;
   connected: boolean;
@@ -527,6 +544,43 @@ export async function verifySmtpConnection(): Promise<{
   host?: string;
   port?: number;
 }> {
+  const brevoKey = getBrevoApiKey();
+  if (brevoKey) {
+    try {
+      const res = await fetch('https://api.brevo.com/v3/account', {
+        headers: {
+          'api-key': brevoKey,
+          'Accept': 'application/json',
+        },
+      });
+      if (res.ok) {
+        return {
+          configured: true,
+          connected: true,
+          message: 'Brevo API authenticated successfully over HTTPS (Port 443 — cloud compliant).',
+          host: 'api.brevo.com',
+          port: 443,
+        };
+      }
+      const data = await res.json().catch(() => ({}));
+      return {
+        configured: true,
+        connected: false,
+        message: `Brevo API authentication failed: ${data.message || res.statusText}`,
+        host: 'api.brevo.com',
+        port: 443,
+      };
+    } catch (err: unknown) {
+      return {
+        configured: true,
+        connected: false,
+        message: `Network error reaching Brevo: ${err instanceof Error ? err.message : String(err)}`,
+        host: 'api.brevo.com',
+        port: 443,
+      };
+    }
+  }
+
   const resendKey = getResendApiKey();
   if (resendKey) {
     try {
@@ -621,6 +675,49 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
     fs.writeFileSync(filePath, html, 'utf-8');
   } catch (writeErr) {
     console.warn('[Email Service] Could not write email preview file to disk:', writeErr);
+  }
+
+  const brevoKey = getBrevoApiKey();
+  if (brevoKey) {
+    try {
+      const sender = getBrevoSender();
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': brevoKey,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          sender,
+          to: [
+            {
+              email: payload.email,
+              name: payload.fullName,
+            },
+          ],
+          subject,
+          htmlContent: html,
+          textContent: text,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(`Brevo API error (${res.status}): ${data.message || JSON.stringify(data)}`);
+      }
+
+      console.log(`[Email Dispatcher] Delivered via Brevo HTTPS (Port 443) to: ${payload.email} (Message ID: ${data.messageId})`);
+      return {
+        success: true,
+        messageId: data.messageId || `brevo-${Date.now()}`,
+        previewFile: filePath,
+        simulated: false,
+      };
+    } catch (brevoErr: unknown) {
+      console.error(`[Email Dispatcher] Brevo HTTPS delivery failed for ${payload.email}:`, brevoErr);
+      throw brevoErr;
+    }
   }
 
   const resendKey = getResendApiKey();
