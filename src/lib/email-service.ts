@@ -459,6 +459,24 @@ function reloadEnvFromDisk() {
   }
 }
 
+// Retrieves Mailjet credentials if configured
+export function getMailjetCredentials(): { apiKey: string; secretKey: string } | null {
+  reloadEnvFromDisk();
+  const apiKey = process.env.MAILJET_API_KEY || process.env.MJ_APIKEY_PUBLIC;
+  const secretKey = process.env.MAILJET_SECRET_KEY || process.env.MJ_APIKEY_PRIVATE;
+  if (apiKey && secretKey && apiKey.trim() && secretKey.trim()) {
+    return { apiKey: apiKey.trim(), secretKey: secretKey.trim() };
+  }
+  return null;
+}
+
+// Retrieves safe sender object for Mailjet
+export function getMailjetSender(): { Name: string; Email: string } {
+  const customEmail = process.env.MAILJET_FROM_EMAIL || process.env.SMTP_USER || 'elanwadebrook@gmail.com';
+  const customName = process.env.MAILJET_FROM_NAME || 'Desla Official';
+  return { Name: customName, Email: customEmail };
+}
+
 // Retrieves SendGrid API key if configured
 export function getSendgridApiKey(): string | null {
   reloadEnvFromDisk();
@@ -512,10 +530,10 @@ export function getResendFrom(): string {
   return 'Desla Official <onboarding@resend.dev>';
 }
 
-// Checks if live email dispatch credentials (SendGrid, Brevo, Resend, or SMTP) are fully provided
+// Checks if live email dispatch credentials (Mailjet, SendGrid, Brevo, Resend, or SMTP) are fully provided
 export function isSmtpConfigured(): boolean {
   reloadEnvFromDisk();
-  if (getSendgridApiKey() || getBrevoApiKey() || getResendApiKey()) {
+  if (getMailjetCredentials() || getSendgridApiKey() || getBrevoApiKey() || getResendApiKey()) {
     return true;
   }
   const pass = process.env.SMTP_PASS?.replace(/\s+/g, '') || '';
@@ -532,7 +550,7 @@ export function isSmtpConfigured(): boolean {
 // Builds or retrieves cached nodemailer transport instance
 export function getMailTransport() {
   reloadEnvFromDisk();
-  if (getSendgridApiKey() || getBrevoApiKey() || getResendApiKey()) {
+  if (getMailjetCredentials() || getSendgridApiKey() || getBrevoApiKey() || getResendApiKey()) {
     return null; // Cloud APIs use direct HTTPS Port 443 fetch
   }
   if (!isSmtpConfigured()) {
@@ -553,7 +571,7 @@ export function getMailTransport() {
   });
 }
 
-// Verifies email credentials (SendGrid, Brevo, Resend HTTPS API, or SMTP handshake)
+// Verifies email credentials (Mailjet, SendGrid, Brevo, Resend HTTPS API, or SMTP handshake)
 export async function verifySmtpConnection(): Promise<{
   configured: boolean;
   connected: boolean;
@@ -561,6 +579,42 @@ export async function verifySmtpConnection(): Promise<{
   host?: string;
   port?: number;
 }> {
+  const mailjetCreds = getMailjetCredentials();
+  if (mailjetCreds) {
+    try {
+      const auth = Buffer.from(`${mailjetCreds.apiKey}:${mailjetCreds.secretKey}`).toString('base64');
+      const res = await fetch('https://api.mailjet.com/v3/REST/user', {
+        headers: {
+          Authorization: `Basic ${auth}`,
+        },
+      });
+      if (res.ok) {
+        return {
+          configured: true,
+          connected: true,
+          message: 'Mailjet API authenticated successfully over HTTPS (Port 443 — cloud compliant).',
+          host: 'api.mailjet.com',
+          port: 443,
+        };
+      }
+      return {
+        configured: true,
+        connected: false,
+        message: `Mailjet API authentication failed with status ${res.status}. Please check your API Key & Secret Key.`,
+        host: 'api.mailjet.com',
+        port: 443,
+      };
+    } catch (err: unknown) {
+      return {
+        configured: true,
+        connected: false,
+        message: `Network error reaching Mailjet: ${err instanceof Error ? err.message : String(err)}`,
+        host: 'api.mailjet.com',
+        port: 443,
+      };
+    }
+  }
+
   const sendgridKey = getSendgridApiKey();
   if (sendgridKey) {
     try {
@@ -727,6 +781,59 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
     fs.writeFileSync(filePath, html, 'utf-8');
   } catch (writeErr) {
     console.warn('[Email Service] Could not write email preview file to disk:', writeErr);
+  }
+
+  const mailjetCreds = getMailjetCredentials();
+  if (mailjetCreds) {
+    try {
+      const sender = getMailjetSender();
+      const auth = Buffer.from(`${mailjetCreds.apiKey}:${mailjetCreds.secretKey}`).toString('base64');
+      const res = await fetch('https://api.mailjet.com/v3.1/send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Messages: [
+            {
+              From: sender,
+              To: [
+                {
+                  Email: payload.email,
+                  Name: payload.fullName,
+                },
+              ],
+              Subject: subject,
+              TextPart: text,
+              HTMLPart: html,
+            },
+          ],
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(`Mailjet API error (${res.status}): ${JSON.stringify(data)}`);
+      }
+
+      const msgResult = data?.Messages?.[0];
+      if (msgResult && msgResult.Status !== 'success') {
+        const errors = msgResult.Errors?.map((e: any) => e.ErrorMessage).join(', ');
+        throw new Error(`Mailjet message error: ${errors || msgResult.Status}`);
+      }
+
+      console.log(`[Email Dispatcher] Delivered via Mailjet HTTPS (Port 443) to: ${payload.email}`);
+      return {
+        success: true,
+        messageId: `mailjet-${Date.now()}`,
+        previewFile: filePath,
+        simulated: false,
+      };
+    } catch (mjErr: unknown) {
+      console.error(`[Email Dispatcher] Mailjet HTTPS delivery failed for ${payload.email}:`, mjErr);
+      throw mjErr;
+    }
   }
 
   const sendgridKey = getSendgridApiKey();
