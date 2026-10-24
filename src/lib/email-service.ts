@@ -459,9 +459,31 @@ function reloadEnvFromDisk() {
   }
 }
 
-// Checks if live SMTP credentials are fully provided
+// Retrieves Resend API key if configured
+export function getResendApiKey(): string | null {
+  reloadEnvFromDisk();
+  const key = process.env.RESEND_API_KEY || (process.env.SMTP_PASS?.startsWith('re_') ? process.env.SMTP_PASS : null);
+  if (key && key.trim().startsWith('re_')) {
+    return key.trim();
+  }
+  return null;
+}
+
+// Retrieves safe sender address for Resend
+export function getResendFrom(): string {
+  const custom = process.env.RESEND_FROM || process.env.SMTP_FROM;
+  if (custom && !custom.includes('@gmail.com') && !custom.includes('@yahoo.com') && !custom.includes('@hotmail.com')) {
+    return custom;
+  }
+  return 'Desla Official <onboarding@resend.dev>';
+}
+
+// Checks if live email dispatch credentials (Resend HTTPS or SMTP) are fully provided
 export function isSmtpConfigured(): boolean {
   reloadEnvFromDisk();
+  if (getResendApiKey()) {
+    return true;
+  }
   const pass = process.env.SMTP_PASS?.replace(/\s+/g, '') || '';
   return Boolean(
     process.env.SMTP_HOST &&
@@ -476,6 +498,9 @@ export function isSmtpConfigured(): boolean {
 // Builds or retrieves cached nodemailer transport instance
 export function getMailTransport() {
   reloadEnvFromDisk();
+  if (getResendApiKey()) {
+    return null; // Resend uses direct HTTPS port 443 fetch
+  }
   if (!isSmtpConfigured()) {
     return null;
   }
@@ -494,7 +519,7 @@ export function getMailTransport() {
   });
 }
 
-// Verifies SMTP handshake and authentication
+// Verifies email credentials (Resend HTTPS API or SMTP handshake)
 export async function verifySmtpConnection(): Promise<{
   configured: boolean;
   connected: boolean;
@@ -502,6 +527,40 @@ export async function verifySmtpConnection(): Promise<{
   host?: string;
   port?: number;
 }> {
+  const resendKey = getResendApiKey();
+  if (resendKey) {
+    try {
+      const res = await fetch('https://api.resend.com/api-keys', {
+        headers: { Authorization: `Bearer ${resendKey}` },
+      });
+      if (res.ok) {
+        return {
+          configured: true,
+          connected: true,
+          message: 'Resend API authenticated successfully over HTTPS (Port 443 — cloud compliant).',
+          host: 'api.resend.com',
+          port: 443,
+        };
+      }
+      const data = await res.json().catch(() => ({}));
+      return {
+        configured: true,
+        connected: false,
+        message: `Resend API authentication failed: ${data.message || res.statusText}`,
+        host: 'api.resend.com',
+        port: 443,
+      };
+    } catch (err: unknown) {
+      return {
+        configured: true,
+        connected: false,
+        message: `Network error reaching Resend: ${err instanceof Error ? err.message : String(err)}`,
+        host: 'api.resend.com',
+        port: 443,
+      };
+    }
+  }
+
   const host = process.env.SMTP_HOST;
   const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 465;
 
@@ -509,7 +568,7 @@ export async function verifySmtpConnection(): Promise<{
     return {
       configured: false,
       connected: false,
-      message: 'SMTP is running in local simulation/file-log mode. Add your SMTP credentials to enable live sending.',
+      message: 'Email service is running in local simulation/file-log mode. Add your RESEND_API_KEY or SMTP credentials to enable live sending.',
       host,
       port,
     };
@@ -562,6 +621,43 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
     fs.writeFileSync(filePath, html, 'utf-8');
   } catch (writeErr) {
     console.warn('[Email Service] Could not write email preview file to disk:', writeErr);
+  }
+
+  const resendKey = getResendApiKey();
+  if (resendKey) {
+    try {
+      const from = getResendFrom();
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from,
+          to: [payload.email],
+          subject,
+          html,
+          text,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(`Resend API error (${res.status}): ${data.message || JSON.stringify(data)}`);
+      }
+
+      console.log(`[Email Dispatcher] Delivered via Resend HTTPS (Port 443) to: ${payload.email} (Message ID: ${data.id})`);
+      return {
+        success: true,
+        messageId: data.id,
+        previewFile: filePath,
+        simulated: false,
+      };
+    } catch (resendErr: unknown) {
+      console.error(`[Email Dispatcher] Resend HTTPS delivery failed for ${payload.email}:`, resendErr);
+      throw resendErr;
+    }
   }
 
   const transporter = getMailTransport();
