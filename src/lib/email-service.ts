@@ -459,6 +459,23 @@ function reloadEnvFromDisk() {
   }
 }
 
+// Retrieves SendGrid API key if configured
+export function getSendgridApiKey(): string | null {
+  reloadEnvFromDisk();
+  const key = process.env.SENDGRID_API_KEY || (process.env.SMTP_PASS?.startsWith('SG.') ? process.env.SMTP_PASS : null);
+  if (key && key.trim()) {
+    return key.trim();
+  }
+  return null;
+}
+
+// Retrieves safe sender object for SendGrid
+export function getSendgridSender(): { name: string; email: string } {
+  const customEmail = process.env.SENDGRID_FROM_EMAIL || process.env.SMTP_USER || 'elanwadebrook@gmail.com';
+  const customName = process.env.SENDGRID_FROM_NAME || 'Desla Official';
+  return { name: customName, email: customEmail };
+}
+
 // Retrieves Brevo (Sendinblue) API key if configured
 export function getBrevoApiKey(): string | null {
   reloadEnvFromDisk();
@@ -495,10 +512,10 @@ export function getResendFrom(): string {
   return 'Desla Official <onboarding@resend.dev>';
 }
 
-// Checks if live email dispatch credentials (Brevo HTTPS, Resend HTTPS, or SMTP) are fully provided
+// Checks if live email dispatch credentials (SendGrid, Brevo, Resend, or SMTP) are fully provided
 export function isSmtpConfigured(): boolean {
   reloadEnvFromDisk();
-  if (getBrevoApiKey() || getResendApiKey()) {
+  if (getSendgridApiKey() || getBrevoApiKey() || getResendApiKey()) {
     return true;
   }
   const pass = process.env.SMTP_PASS?.replace(/\s+/g, '') || '';
@@ -515,8 +532,8 @@ export function isSmtpConfigured(): boolean {
 // Builds or retrieves cached nodemailer transport instance
 export function getMailTransport() {
   reloadEnvFromDisk();
-  if (getBrevoApiKey() || getResendApiKey()) {
-    return null; // Brevo and Resend use direct HTTPS Port 443 fetch
+  if (getSendgridApiKey() || getBrevoApiKey() || getResendApiKey()) {
+    return null; // Cloud APIs use direct HTTPS Port 443 fetch
   }
   if (!isSmtpConfigured()) {
     return null;
@@ -536,7 +553,7 @@ export function getMailTransport() {
   });
 }
 
-// Verifies email credentials (Brevo HTTPS API, Resend HTTPS API, or SMTP handshake)
+// Verifies email credentials (SendGrid, Brevo, Resend HTTPS API, or SMTP handshake)
 export async function verifySmtpConnection(): Promise<{
   configured: boolean;
   connected: boolean;
@@ -544,6 +561,41 @@ export async function verifySmtpConnection(): Promise<{
   host?: string;
   port?: number;
 }> {
+  const sendgridKey = getSendgridApiKey();
+  if (sendgridKey) {
+    try {
+      const res = await fetch('https://api.sendgrid.com/v3/scopes', {
+        headers: {
+          Authorization: `Bearer ${sendgridKey}`,
+        },
+      });
+      if (res.ok) {
+        return {
+          configured: true,
+          connected: true,
+          message: 'SendGrid API authenticated successfully over HTTPS (Port 443 — cloud compliant).',
+          host: 'api.sendgrid.com',
+          port: 443,
+        };
+      }
+      return {
+        configured: true,
+        connected: false,
+        message: `SendGrid API authentication failed with status ${res.status}.`,
+        host: 'api.sendgrid.com',
+        port: 443,
+      };
+    } catch (err: unknown) {
+      return {
+        configured: true,
+        connected: false,
+        message: `Network error reaching SendGrid: ${err instanceof Error ? err.message : String(err)}`,
+        host: 'api.sendgrid.com',
+        port: 443,
+      };
+    }
+  }
+
   const brevoKey = getBrevoApiKey();
   if (brevoKey) {
     try {
@@ -675,6 +727,49 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
     fs.writeFileSync(filePath, html, 'utf-8');
   } catch (writeErr) {
     console.warn('[Email Service] Could not write email preview file to disk:', writeErr);
+  }
+
+  const sendgridKey = getSendgridApiKey();
+  if (sendgridKey) {
+    try {
+      const sender = getSendgridSender();
+      const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sendgridKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          personalizations: [
+            {
+              to: [{ email: payload.email, name: payload.fullName }],
+            },
+          ],
+          from: sender,
+          subject,
+          content: [
+            { type: 'text/plain', value: text },
+            { type: 'text/html', value: html },
+          ],
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(`SendGrid API error (${res.status}): ${JSON.stringify(data)}`);
+      }
+
+      console.log(`[Email Dispatcher] Delivered via SendGrid HTTPS (Port 443) to: ${payload.email}`);
+      return {
+        success: true,
+        messageId: `sendgrid-${Date.now()}`,
+        previewFile: filePath,
+        simulated: false,
+      };
+    } catch (sgErr: unknown) {
+      console.error(`[Email Dispatcher] SendGrid HTTPS delivery failed for ${payload.email}:`, sgErr);
+      throw sgErr;
+    }
   }
 
   const brevoKey = getBrevoApiKey();
