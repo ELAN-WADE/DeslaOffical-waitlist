@@ -1,0 +1,69 @@
+import React from 'react';
+import { Navbar } from './components/Navbar';
+import { HeroSection } from './components/HeroSection';
+import { WhatWeDoSection } from './components/WhatWeDoSection';
+import { CommerceStorySection } from './components/CommerceStorySection';
+import { ProductChaptersSection } from './components/ProductChaptersSection';
+import { EcosystemSection } from './components/EcosystemSection';
+import { BrandManifestoSection } from './components/BrandManifestoSection';
+import { WaitlistSection } from './components/WaitlistSection';
+import { FaqSection } from './components/FaqSection';
+import { FooterSection } from './components/FooterSection';
+
+export const App: React.FC = () => {
+  const scrollToWaitlist = () => {
+    const el = document.getElementById('waitlist');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToDiscover = () => {
+    const el = document.getElementById('discover');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#FBF9F5] text-[#0C0C0D] selection:bg-[#C5A059]/20 selection:text-[#0C0C0D]">
+      {/* Floating Art-Directed Navigation */}
+      <Navbar onJoinClick={scrollToWaitlist} />
+
+      {/* 01. Asymmetric Editorial Hero with 8-Image Sequence & Live UI Mockup */}
+      <HeroSection 
+        onJoinClick={scrollToWaitlist}
+        onDiscoverClick={scrollToDiscover}
+      />
+
+      {/* 02. What We Do: The 4 Core Propositions */}
+      <WhatWeDoSection />
+
+      {/* 03. Beauty Commerce / Editorial Magazine Spread */}
+      <CommerceStorySection />
+
+      {/* 04. What To Expect: 5 Sticky Product Experience Chapters */}
+      <ProductChaptersSection />
+
+      {/* 05. Built For The Beauty Ecosystem: Creators & Distributors */}
+      <EcosystemSection 
+        onJoinCreator={scrollToWaitlist}
+        onJoinDistributor={scrollToWaitlist}
+      />
+
+      {/* 06. About Delsla: Quiet Brand Philosophy & Provenance */}
+      <BrandManifestoSection />
+
+      {/* 07. The Culmination: Multi-Persona Waitlist Conversion Engine */}
+      <WaitlistSection />
+
+      {/* 08. Editorial FAQ Accordion */}
+      <FaqSection />
+
+      {/* 09. Sculptural Minimal Luxury Footer */}
+      <FooterSection onJoinClick={scrollToWaitlist} />
+    </div>
+  );
+};
+
+export default App;
