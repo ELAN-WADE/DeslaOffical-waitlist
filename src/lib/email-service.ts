@@ -26,11 +26,22 @@ export interface EmailTemplatePayload {
   callToActionUrl?: string;
 }
 
-const EMAILS_OUTPUT_DIR = path.join(process.cwd(), 'data', 'emails');
+function getEmailsOutputDir(): string {
+  const raw = process.env.DATA_DIR;
+  const baseDir = raw && raw.trim()
+    ? (path.isAbsolute(raw.trim()) ? raw.trim() : path.resolve(/*turbopackIgnore: true*/ process.cwd(), raw.trim()))
+    : path.join(process.cwd(), 'data');
+  return path.join(baseDir, 'emails');
+}
 
 function ensureEmailDir() {
-  if (!fs.existsSync(EMAILS_OUTPUT_DIR)) {
-    fs.mkdirSync(EMAILS_OUTPUT_DIR, { recursive: true });
+  try {
+    const dir = getEmailsOutputDir();
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  } catch (err) {
+    console.warn('[Email Service] Could not ensure email directory:', err);
   }
 }
 
@@ -546,8 +557,12 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
   // Persist visual HTML preview with embedded base64 logo for immediate local inspection
   const prefix = isBroadcast ? 'broadcast' : 'waitlist';
   const fileName = `${prefix}-${payload.jobId}-${Date.now()}.html`;
-  const filePath = path.join(EMAILS_OUTPUT_DIR, fileName);
-  fs.writeFileSync(filePath, html, 'utf-8');
+  const filePath = path.join(getEmailsOutputDir(), fileName);
+  try {
+    fs.writeFileSync(filePath, html, 'utf-8');
+  } catch (writeErr) {
+    console.warn('[Email Service] Could not write email preview file to disk:', writeErr);
+  }
 
   const transporter = getMailTransport();
   const fromAddress = process.env.SMTP_FROM || '"Desla Official" <onboarding@resend.dev>';

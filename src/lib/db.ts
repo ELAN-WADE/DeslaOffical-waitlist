@@ -3,29 +3,54 @@ import path from 'path';
 import fs from 'fs';
 
 // Ensure data directory exists (supports persistent volumes on Render & Railway)
-const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
-if (!fs.existsSync(/*turbopackIgnore: true*/ DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+function getDataDir(): string {
+  const raw = process.env.DATA_DIR;
+  if (raw && raw.trim()) {
+    return path.isAbsolute(raw.trim()) ? raw.trim() : path.resolve(/*turbopackIgnore: true*/ process.cwd(), raw.trim());
+  }
+  return path.join(process.cwd(), 'data');
 }
 
-const DB_PATH = process.env.DATABASE_PATH || path.join(DATA_DIR, 'delsla.db');
+function getDatabasePath(): string {
+  const raw = process.env.DATABASE_PATH;
+  if (raw && raw.trim()) {
+    return path.isAbsolute(raw.trim()) ? raw.trim() : path.resolve(/*turbopackIgnore: true*/ process.cwd(), raw.trim());
+  }
+  return path.join(getDataDir(), 'delsla.db');
+}
 
 declare global {
   // eslint-disable-next-line no-var
   var __delslaDb: Database.Database | undefined;
 }
 
+let cachedDb: Database.Database | null = null;
+
 export function getDb(): Database.Database {
   if (global.__delslaDb) {
     return global.__delslaDb;
   }
+  if (cachedDb) {
+    return cachedDb;
+  }
 
-  const db = new Database(DB_PATH);
+  const dataDir = getDataDir();
+  if (!fs.existsSync(/*turbopackIgnore: true*/ dataDir)) {
+    try {
+      fs.mkdirSync(dataDir, { recursive: true });
+    } catch (dirErr) {
+      console.error('[DB] Error creating data directory:', dirErr);
+    }
+  }
+
+  const dbPath = getDatabasePath();
+  const db = new Database(dbPath);
 
   // High performance & concurrency settings
   db.pragma('journal_mode = WAL');
   db.pragma('synchronous = NORMAL');
   db.pragma('foreign_keys = ON');
+  db.pragma('busy_timeout = 5000'); // 5s timeout to prevent SQLITE_BUSY under concurrent load
 
   // Initialize schema
   db.exec(`
@@ -87,9 +112,9 @@ export function getDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_email_jobs_waitlist_id ON email_jobs(waitlist_id);
   `);
 
-  if (process.env.NODE_ENV !== 'production') {
-    global.__delslaDb = db;
-  }
+  // Maintain singleton in both production and development to prevent database locking
+  cachedDb = db;
+  global.__delslaDb = db;
 
   return db;
 }

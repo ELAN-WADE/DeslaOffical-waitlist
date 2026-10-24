@@ -14,8 +14,8 @@ export interface ProcessResult {
   }>;
 }
 
-export function enqueueEmailJob(entry: WaitlistEntry): string {
-  const db = getDb();
+export function enqueueEmailJob(entry: WaitlistEntry, existingDb?: ReturnType<typeof getDb>): string {
+  const db = existingDb || getDb();
   const jobId = `job_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
   
   const payload = {

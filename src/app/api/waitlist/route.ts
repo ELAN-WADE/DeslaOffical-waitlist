@@ -294,7 +294,7 @@ export async function POST(request: Request) {
       };
 
       // Enqueue transactional email job
-      createdJobId = enqueueEmailJob(newEntry);
+      createdJobId = enqueueEmailJob(newEntry, db);
     });
 
     executeReservation();
