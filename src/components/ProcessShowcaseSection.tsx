@@ -12,17 +12,17 @@ const PROCESS_ITEMS = [
   {
     id: 'store',
     number: '01',
-    badge: 'Clinical Commerce',
+    badge: 'Natural Commerce',
     title: 'The Formulation Apothecary',
-    subtitle: 'Climate-balanced skincare for melanin depths IV through VI.',
-    description: 'Every formulation is cold-blended in certified cleanrooms without hydroquinone, mercury, or harsh steroids. Tested in high-UV and tropical humidity environments.',
-    image: '/showcase/showcase-store.jpg',
+    subtitle: 'Thoughtful skincare formulated for natural radiance and balance.',
+    description: 'Every formulation is cold-blended with pure botanical oils and restorative plant butters. Clean, nourishing formulations tested for everyday radiance.',
+    image: '/images/desla-model-safehaven.jpg',
     role: 'shopper' as RoleType,
     icon: ShoppingBag,
     specs: [
-      '100% NAFDAC Authentic Registered',
-      'Bio-identical Ceramide Lipids',
-      'Clinical Shade Match Verification',
+      '100% Certified Authentic Care',
+      'Botanical Oils & Restorative Butters',
+      'Natural Shade & Glow Verification',
     ],
     highlight: 'Opening Batch: 5,000 Units Only',
   },
@@ -33,7 +33,7 @@ const PROCESS_ITEMS = [
     title: 'Creator Studio & PR Gifting Suite',
     subtitle: 'Honest reviews, embargoed drops, and real-time revenue splits.',
     description: 'Verified beauty creators, licensed estheticians, and skin educators receive pre-release PR testing suites, custom formulation lookbooks, and instant transparent commission payouts.',
-    image: '/showcase/showcase-creator.jpg',
+    image: '/images/desla-studio-trio.jpg',
     role: 'creator' as RoleType,
     icon: Sparkles,
     specs: [
@@ -47,10 +47,10 @@ const PROCESS_ITEMS = [
     id: 'distributor',
     number: '03',
     badge: 'B2B Wholesale',
-    title: 'Distributor Hub & Clinic Dispensary',
-    subtitle: 'Priority wholesale allocations for licensed aesthetic practices.',
-    description: 'Regional stockists, dermatology clinics, and aesthetic spas gain guaranteed inventory runs, verifiable batch certificates, and tiered volume pricing with dedicated account concierges.',
-    image: '/showcase/showcase-distributor.jpg',
+    title: 'Distributor Hub & Retail Partners',
+    subtitle: 'Priority wholesale allocations for regional stockists and retailers.',
+    description: 'Regional stockists, retail partners, and beauty distributors gain guaranteed inventory runs, verifiable batch certificates, and tiered volume pricing with dedicated account concierges.',
+    image: '/images/desla-distributor-bag.jpg',
     role: 'distributor' as RoleType,
     icon: Building2,
     specs: [
@@ -114,7 +114,7 @@ export const ProcessShowcaseSection: React.FC<ProcessShowcaseSectionProps> = ({ 
             className="text-[15px] sm:text-[17px] text-[#55524E] leading-relaxed max-w-2xl font-normal"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            Explore the unified operational ecosystem behind our waitlist — combining clinical research, honest creator alliances, bulk dispensary distribution, and temperature-controlled logistics.
+            Explore the unified operational ecosystem behind our waitlist — combining natural formulation research, honest creator alliances, wholesale distribution, and temperature-controlled logistics.
           </p>
         </div>
 

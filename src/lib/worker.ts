@@ -40,7 +40,7 @@ export function enqueueEmailJob(entry: WaitlistEntry, existingDb?: ReturnType<ty
       : entry.role === 'distributor'
       ? `Desla Distribution Allocation Confirmed (#${entry.queueNumber})`
       : entry.role === 'partner'
-      ? `Desla Clinical Partnership Confirmed (#${entry.queueNumber})`
+      ? `Desla Brand & Formulation Partnership Confirmed (#${entry.queueNumber})`
       : `Welcome to Desla — Your Place Is Reserved (#${entry.queueNumber})`;
 
   const stmt = db.prepare(`

@@ -334,7 +334,14 @@ export default function BounceCards({
           style={{ zIndex: i + 1 }}
           {...(settings.clickable ? { role: 'button', tabIndex: 0, 'aria-label': card.alt || `Card ${i + 1}` } : null)}
         >
-          {card.src && <img src={card.src} alt={card.alt} draggable={false} />}
+          {card.src && (
+            <img
+              src={card.src}
+              alt={card.alt}
+              draggable={false}
+              className="w-full h-full object-cover object-center select-none"
+            />
+          )}
         </div>
       ))}
     </div>

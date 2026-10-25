@@ -21,13 +21,13 @@ export const PartnersSection: React.FC<PartnersSectionProps> = ({ onJoinPartner 
             Institutional Alliances
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl text-[#111112] font-light leading-tight mb-3">
-            Formulation & Clinical Research Partners
+            Formulation & Research Partners
           </h2>
           <p 
             className="text-[14px] text-[#666360] font-normal leading-relaxed"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            Collaborating with leading cosmetic chemistry laboratories, pharmaceutical supply chains, and aesthetic dermatology researchers across Africa and Europe.
+            Collaborating with leading cosmetic chemistry laboratories, pharmaceutical supply chains, and skincare researchers across Africa and Europe.
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export const PartnersSection: React.FC<PartnersSectionProps> = ({ onJoinPartner 
                 <Microscope className="w-4 h-4 text-[#B89248]" />
               </div>
               <span className="text-[10px] tracking-[0.16em] uppercase font-semibold text-[#111112] block mb-1">
-                Clinical Telemetry
+                Diagnostics & Telemetry
               </span>
               <h3 className="font-serif text-2xl text-[#111112] font-normal mb-3">
                 Multi-Spectrum Vision Intelligence
@@ -103,7 +103,7 @@ export const PartnersSection: React.FC<PartnersSectionProps> = ({ onJoinPartner 
                 Pharmaceutical Logistics SLA
               </h3>
               <p className="text-xs text-[#666360] leading-relaxed mb-6 font-light">
-                Leverage Desla's temperature-monitored cold-chain dispatch (guaranteed under 24°C) to protect formulation integrity from airport arrival to medical clinics nationwide.
+                Leverage Desla's temperature-monitored cold-chain dispatch (guaranteed under 24°C) to protect formulation integrity from airport arrival to retail partners nationwide.
               </p>
             </div>
             <div className="pt-4 border-t border-[#E8E2D8] space-y-2 text-[11px] text-[#666360]">
@@ -127,10 +127,10 @@ export const PartnersSection: React.FC<PartnersSectionProps> = ({ onJoinPartner 
               Institutional Allocation
             </span>
             <h4 className="font-serif text-2xl text-white font-light">
-              Are you a laboratory, supplier, or clinical research institute?
+              Are you a laboratory, supplier, or research partner?
             </h4>
             <p className="text-xs text-[#9E9A95] max-w-lg mt-1 font-light">
-              Register for tier-1 partner credentials to receive clinical trial telemetry and priority formulation collaboration drops.
+              Register for tier-1 partner credentials to receive formulation telemetry and priority collaboration drops.
             </p>
           </div>
 

@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
               onClick={() => scrollToSection('offerings')}
               className="hover:text-[#111112] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89248] rounded py-1 cursor-pointer"
             >
-              Specimens
+              Collection
             </button>
             <button
               onClick={() => scrollToSection('routine')}
@@ -123,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
                 onClick={() => scrollToSection('offerings')}
                 className="text-left py-2 hover:text-[#B89248] transition-colors"
               >
-                Featured Specimens
+                Featured Collection
               </button>
               <button
                 onClick={() => scrollToSection('routine')}

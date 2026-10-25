@@ -336,8 +336,8 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
                       >
                         <option value="shopper">Beauty Enthusiast & Shopper</option>
                         <option value="creator">Beauty Creator & Educator</option>
-                        <option value="distributor">Clinic, Dispensary & Stockist</option>
-                        <option value="partner">Clinical Research & Lab Partner</option>
+                        <option value="distributor">Distributor & Stockist</option>
+                        <option value="partner">Partnership & Brand Partner</option>
                       </select>
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#7A7672]">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

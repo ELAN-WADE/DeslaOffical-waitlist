@@ -48,7 +48,7 @@ export const ProductChaptersSection: React.FC = () => {
             className="text-[14px] text-[#666360] font-normal"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            An interconnected ecosystem designed for personal discovery, clinical efficacy, and verified logistics.
+            An interconnected ecosystem designed for personal discovery, natural efficacy, and verified logistics.
           </p>
         </div>
 

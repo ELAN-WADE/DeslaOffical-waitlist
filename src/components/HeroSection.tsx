@@ -14,14 +14,14 @@ const PRISM_ITEMS: PrismItem[] = [
     src: '/screenshots/screenshot-hero-home.png',
     alt: 'Desla! Storefront & Hero Page',
     title: 'Desla! Editorial Storefront',
-    subtitle: 'Melanin Barrier Precision • Bio-Identical Lipids',
+    subtitle: 'Natural Skin Health • Essential Daily Care',
     tag: '01 • Storefront',
   },
   {
     src: '/screenshots/screenshot-shop-catalog.png',
-    alt: 'Formulations Catalogue and 3-Step Daily Ritual',
+    alt: 'Formulations Catalogue and 4-Step Daily Ritual',
     title: 'Curated Formulations & Daily Ritual',
-    subtitle: 'Category Navigation • Verified Melanin Actives',
+    subtitle: 'Category Navigation • Natural Botanical Care',
     tag: '02 • Catalogue',
   },
   {
@@ -39,32 +39,32 @@ const PRISM_ITEMS: PrismItem[] = [
     tag: '04 • Diagnostic',
   },
   {
-    src: '/tile_create_studio.jpg',
-    alt: 'Beauty Creator Studio and PR Suite',
-    title: 'Creator Studio & PR Gifting Suite',
+    src: '/images/desla-studio-trio.jpg',
+    alt: 'Desla! Collective & Creator Studio',
+    title: 'Creator Studio & Collective',
     subtitle: 'Pre-Release PR Drops • Instant Affiliate Splits',
     tag: '05 • Creators',
   },
   {
-    src: '/tile_dist_inventory.jpg',
+    src: '/images/desla-distributor-bag.jpg',
     alt: 'Regional Distributor Operations Hub',
     title: 'Regional Distributor Operations Hub',
-    subtitle: 'Guaranteed Bulk Lot Reservations • Cold-Chain Tracking',
+    subtitle: 'Guaranteed Bulk Lot Reservations • Distribution Concierge',
     tag: '06 • Wholesale B2B',
   },
   {
-    src: '/product_barrier_cream.jpg',
-    alt: 'Clinical Barrier Treatment Specimen',
-    title: 'Clinical Barrier Cream Specimen',
-    subtitle: 'Multi-Lipids • Ceramide NP/AP Repair Complex',
-    tag: '07 • Specimen',
+    src: '/images/desla-body-butter.jpg',
+    alt: 'Desla! Safe Haven Body Butter',
+    title: 'Safe Haven Body Butter',
+    subtitle: 'Deep Nourishment • Lasting Softness',
+    tag: '07 • Body Butter',
   },
   {
-    src: '/card_6_golden_oil.jpg',
-    alt: 'Radiant Golden Botanical Oil',
-    title: 'Radiant Golden Botanical Oil',
-    subtitle: 'Pure Kalahari Melon & Jojoba Formulation',
-    tag: '08 • Body Care',
+    src: '/images/desla-body-oil.jpg',
+    alt: 'Desla! Safe Haven Body Oil',
+    title: 'Safe Haven Body Oil',
+    subtitle: 'Nourish • Soften • Glow • Botanical Care',
+    tag: '08 • Body Oil',
   },
 ];
 
@@ -118,7 +118,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJoinClick }) => {
             className="text-xs sm:text-sm text-[#55524E] leading-relaxed max-w-lg mb-6 font-normal"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            Bio-identical lipids, formulated for depth. Join 2,400+ members securing priority allocation access, certified batch reservations, and creator drops.
+            Join over 500+ members securing priority allocation access, certified batch reservations, and creator drops.
           </p>
 
           {/* Direct Waitlist Action (No role switch, takes directly to dedicated waitlist form) */}
@@ -156,7 +156,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onJoinClick }) => {
               className="text-xs font-medium text-[#666360]"
               style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
             >
-              <strong className="text-[#111112] font-semibold">2,427</strong> members awaiting access
+              <strong className="text-[#111112] font-semibold">500+</strong> members awaiting access
             </span>
           </div>
 

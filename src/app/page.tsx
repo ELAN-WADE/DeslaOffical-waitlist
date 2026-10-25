@@ -42,7 +42,7 @@ export default function Home() {
           onGetUpdates={(role) => navigateToWaitlist(role || 'shopper')}
         />
 
-        {/* 5. Daily Routine: 3-step Cleanse → Moisturize → Protect picture-first cards with hover reveal */}
+        {/* 5. Daily Routine: 4-step Cleanse → Wash → Moisturize → Protect picture-first cards with hover reveal */}
         <RoutineSection 
           onJoinRoutine={(role) => navigateToWaitlist(role || 'shopper')}
         />

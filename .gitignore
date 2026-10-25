@@ -46,3 +46,7 @@ pnpm-debug.log*
 # TypeScript cache
 *.tsbuildinfo
 next-env.d.ts
+
+# Temporary media imports
+WhatsApp*
+

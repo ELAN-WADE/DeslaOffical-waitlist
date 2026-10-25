@@ -82,7 +82,7 @@ export async function GET(request: Request) {
     const rows = records.map((r) => {
       const creatorInfo = r.creator_handle ? (r.creator_handle + ' (' + (r.creator_platform || 'Instagram') + ')') : '';
       const distInfo = r.distributor_business ? (r.distributor_business + ' [Vol: ' + (r.distributor_volume || 'Retail') + ']') : '';
-      const partnerInfo = r.partner_organization ? (r.partner_organization + ' [' + (r.partner_focus || 'Clinical') + ']') : '';
+      const partnerInfo = r.partner_organization ? (r.partner_organization + ' [' + (r.partner_focus || 'Partner') + ']') : '';
       const referralUrl = 'https://delsla.com/waitlist?ref=' + (r.referral_code || '');
 
       return [

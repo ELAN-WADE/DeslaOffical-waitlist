@@ -145,7 +145,7 @@ export async function POST(request: Request) {
           : role === 'distributor'
           ? `Desla Commercial & Distribution Allocation Confirmed (Queue #${existing.queue_number})`
           : role === 'partner'
-          ? `Desla Formulation & Clinical Partnership Confirmed (Queue #${existing.queue_number})`
+          ? `Desla Brand & Formulation Partnership Confirmed (Queue #${existing.queue_number})`
           : `Welcome to Desla — Your Place Is Reserved (Queue #${existing.queue_number})`;
 
       const payload = {

@@ -137,13 +137,13 @@ export function generateEmailHtml(data: EmailTemplatePayload): { subject: string
       </div>
     `;
   }
-  // 3. CLINICAL PARTNER
+  // 3. BRAND & FORMULATION PARTNER
   else if (data.role === 'partner') {
-    subject = `Desla Clinical Formulation Alliance confirmed`;
-    roleTitle = 'Clinical & Formulation Alliance';
+    subject = `Desla Brand & Formulation Partnership confirmed`;
+    roleTitle = 'Brand & Formulation Partner';
 
     const orgName = data.partnerOrganization ? escapeHtml(data.partnerOrganization) : 'your organization';
-    mainBodyText = `Thank you for registering ${orgName} with Desla. We collaborate closely with dermatologists, medical estheticians, and skin researchers to validate barrier formulations developed for deeper skin tones.`;
+    mainBodyText = `Thank you for registering ${orgName} with Desla. We collaborate closely with skincare specialists, estheticians, and beauty practitioners to craft pure, natural skin health formulations.`;
 
     privilegesList = `
       <div style="margin: 28px 0; padding-top: 20px; border-top: 1px solid #EAE6DF;">
@@ -151,9 +151,9 @@ export function generateEmailHtml(data: EmailTemplatePayload): { subject: string
           Partnership Inclusions
         </p>
         <p style="font-size: 13.5px; line-height: 1.8; color: #3A3835; margin: 0;">
-          &bull; Early access to clinical whitepapers and stability documentation.<br/>
-          &bull; Panel sample allocations for in-clinic trial evaluation.<br/>
-          &bull; Co-authoring opportunities on tropical formulation efficacy studies.
+          &bull; Early access to formulation briefings and product releases.<br/>
+          &bull; Allocation packages for evaluation and partner programs.<br/>
+          &bull; Collaborative opportunities on natural skincare initiatives.
         </p>
       </div>
     `;
@@ -167,15 +167,15 @@ export function generateEmailHtml(data: EmailTemplatePayload): { subject: string
     const safeConcern = data.skinConcern ? escapeHtml(data.skinConcern) : '';
 
     if (safeConcern.toLowerCase().includes('hyperpigmentation') || safeConcern.toLowerCase().includes('brightening')) {
-      concernCopy = `You noted a priority interest in ${safeConcern}. Our core focus centers on balancing melanin production at the cellular source without harsh bleaching agents or barrier compromise.`;
+      concernCopy = `You noted a priority interest in ${safeConcern}. Our core focus centers on nurturing your skin's natural glow without harsh agents or barrier compromise.`;
     } else if (safeConcern.toLowerCase().includes('aging') || safeConcern.toLowerCase().includes('firming')) {
-      concernCopy = `You noted a priority interest in ${safeConcern}. Our formulations integrate multi-peptide signaling and biomimetic squalane to support natural elasticity under UV and tropical heat.`;
+      concernCopy = `You noted a priority interest in ${safeConcern}. Our formulations integrate botanical antioxidants and nourishing plant lipids to support natural elasticity and youthful vibrance.`;
     } else if (safeConcern.toLowerCase().includes('acne') || safeConcern.toLowerCase().includes('texture') || safeConcern.toLowerCase().includes('pore')) {
-      concernCopy = `You noted a priority interest in ${safeConcern}. We pair micro-dosed liposomal salicylic acid with high-purity niacinamide to refine texture while keeping your moisture barrier intact.`;
+      concernCopy = `You noted a priority interest in ${safeConcern}. We pair gentle botanical extracts with soothing nourishment to refine texture while keeping your moisture barrier intact.`;
     } else if (safeConcern) {
-      concernCopy = `You noted a priority interest in ${safeConcern}. Our barrier formulations focus on bio-identical ceramides 1, 3, and 6-II to restore hydration and eliminate trans-epidermal water loss.`;
+      concernCopy = `You noted a priority interest in ${safeConcern}. Our natural formulations focus on pure botanical oils and restorative plant butters to restore deep hydration and radiance.`;
     } else {
-      concernCopy = `Our barrier formulations focus on bio-identical ceramides 1, 3, and 6-II to restore deep hydration and eliminate trans-epidermal water loss.`;
+      concernCopy = `Our natural formulations focus on pure botanical oils and restorative plant butters to restore deep hydration and radiant skin health.`;
     }
 
     mainBodyText = `Thank you for joining the Desla waitlist. ${concernCopy}`;
@@ -187,9 +187,9 @@ export function generateEmailHtml(data: EmailTemplatePayload): { subject: string
         </p>
         <p style="font-size: 13.5px; line-height: 1.8; color: #3A3835; margin: 0;">
           &bull; 20% private courtesy allocation on your initial collection.<br/>
-          &bull; Complimentary 15ml sensory discovery specimen with your first order.<br/>
+          &bull; Complimentary sensory discovery specimen with your first order.<br/>
           &bull; 48-hour priority window before public batch release.<br/>
-          &bull; Direct invitation to private clinical skin telemetry tools.
+          &bull; Direct invitation to private skin health concierge tools.
         </p>
       </div>
     `;
@@ -462,18 +462,41 @@ function reloadEnvFromDisk() {
 // Retrieves Mailjet credentials if configured
 export function getMailjetCredentials(): { apiKey: string; secretKey: string } | null {
   reloadEnvFromDisk();
-  const apiKey = process.env.MAILJET_API_KEY || process.env.MJ_APIKEY_PUBLIC;
-  const secretKey = process.env.MAILJET_SECRET_KEY || process.env.MJ_APIKEY_PRIVATE;
-  if (apiKey && secretKey && apiKey.trim() && secretKey.trim()) {
-    return { apiKey: apiKey.trim(), secretKey: secretKey.trim() };
+  const apiKey = (
+    process.env.MAILJET_API_KEY ||
+    process.env.MJ_APIKEY_PUBLIC ||
+    process.env.MAILJET_PUBLIC_KEY ||
+    process.env.MJ_API_KEY ||
+    process.env.MAILJET_KEY
+  )?.trim();
+  const secretKey = (
+    process.env.MAILJET_SECRET_KEY ||
+    process.env.MJ_APIKEY_PRIVATE ||
+    process.env.MAILJET_PRIVATE_KEY ||
+    process.env.MAILJET_API_SECRET ||
+    process.env.MAILJET_SECRET
+  )?.trim();
+  if (apiKey && secretKey) {
+    return { apiKey, secretKey };
   }
   return null;
 }
 
 // Retrieves safe sender object for Mailjet
 export function getMailjetSender(): { Name: string; Email: string } {
-  const customEmail = process.env.MAILJET_FROM_EMAIL || process.env.SMTP_USER || 'elanwadebrook@gmail.com';
-  const customName = process.env.MAILJET_FROM_NAME || 'Desla Official';
+  const customEmail = (
+    process.env.MAILJET_FROM_EMAIL ||
+    process.env.MAIL_FROM ||
+    process.env.SMTP_FROM ||
+    process.env.SMTP_USER ||
+    process.env.EMAIL_FROM ||
+    'elanwadebrook@gmail.com'
+  ).trim();
+  const customName = (
+    process.env.MAILJET_FROM_NAME ||
+    process.env.MAIL_FROM_NAME ||
+    'Desla Official'
+  ).trim();
   return { Name: customName, Email: customEmail };
 }
 
@@ -506,8 +529,20 @@ export function getBrevoApiKey(): string | null {
 
 // Retrieves safe sender object for Brevo
 export function getBrevoSender(): { name: string; email: string } {
-  const customEmail = process.env.BREVO_FROM_EMAIL || process.env.SMTP_USER || 'elanwadebrook@gmail.com';
-  const customName = process.env.BREVO_FROM_NAME || 'Desla Official';
+  const customEmail = (
+    process.env.BREVO_SENDER_EMAIL ||
+    process.env.BREVO_FROM_EMAIL ||
+    process.env.MAIL_FROM ||
+    process.env.SMTP_FROM ||
+    process.env.SMTP_USER ||
+    'danieladelekeoluwasegun@gmail.com'
+  ).trim();
+  const customName = (
+    process.env.BREVO_SENDER_NAME ||
+    process.env.BREVO_FROM_NAME ||
+    process.env.MAIL_FROM_NAME ||
+    'Desla Official'
+  ).trim();
   return { name: customName, email: customEmail };
 }
 
@@ -783,6 +818,52 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
     console.warn('[Email Service] Could not write email preview file to disk:', writeErr);
   }
 
+  const dispatchErrors: string[] = [];
+
+  const brevoKey = getBrevoApiKey();
+  if (brevoKey) {
+    try {
+      const sender = getBrevoSender();
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': brevoKey,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          sender,
+          to: [
+            {
+              email: payload.email,
+              name: payload.fullName,
+            },
+          ],
+          subject,
+          htmlContent: html,
+          textContent: text,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(`Brevo API error (${res.status}): ${data.message || JSON.stringify(data)}`);
+      }
+
+      console.log(`[Email Dispatcher] Delivered via Brevo HTTPS (Port 443) to: ${payload.email} (Message ID: ${data.messageId})`);
+      return {
+        success: true,
+        messageId: data.messageId || `brevo-${Date.now()}`,
+        previewFile: filePath,
+        simulated: false,
+      };
+    } catch (brevoErr: unknown) {
+      const msg = brevoErr instanceof Error ? brevoErr.message : String(brevoErr);
+      console.warn(`[Email Dispatcher] Brevo attempt failed: ${msg}. Attempting next provider...`);
+      dispatchErrors.push(`Brevo: ${msg}`);
+    }
+  }
+
   const mailjetCreds = getMailjetCredentials();
   if (mailjetCreds) {
     try {
@@ -814,12 +895,12 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        throw new Error(`Mailjet API error (${res.status}): ${JSON.stringify(data)}`);
+        throw new Error(`Mailjet API error (${res.status}): ${data.ErrorMessage || JSON.stringify(data)}`);
       }
 
       const msgResult = data?.Messages?.[0];
       if (msgResult && msgResult.Status !== 'success') {
-        const errors = msgResult.Errors?.map((e: any) => e.ErrorMessage).join(', ');
+        const errors = msgResult.Errors?.map((e: any) => `${e.ErrorCode ? `[${e.ErrorCode}] ` : ''}${e.ErrorMessage || ''}`).join(', ');
         throw new Error(`Mailjet message error: ${errors || msgResult.Status}`);
       }
 
@@ -831,8 +912,9 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
         simulated: false,
       };
     } catch (mjErr: unknown) {
-      console.error(`[Email Dispatcher] Mailjet HTTPS delivery failed for ${payload.email}:`, mjErr);
-      throw mjErr;
+      const msg = mjErr instanceof Error ? mjErr.message : String(mjErr);
+      console.warn(`[Email Dispatcher] Mailjet attempt failed: ${msg}. Attempting next provider...`);
+      dispatchErrors.push(`Mailjet: ${msg}`);
     }
   }
 
@@ -874,51 +956,9 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
         simulated: false,
       };
     } catch (sgErr: unknown) {
-      console.error(`[Email Dispatcher] SendGrid HTTPS delivery failed for ${payload.email}:`, sgErr);
-      throw sgErr;
-    }
-  }
-
-  const brevoKey = getBrevoApiKey();
-  if (brevoKey) {
-    try {
-      const sender = getBrevoSender();
-      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: {
-          'api-key': brevoKey,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          sender,
-          to: [
-            {
-              email: payload.email,
-              name: payload.fullName,
-            },
-          ],
-          subject,
-          htmlContent: html,
-          textContent: text,
-        }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        throw new Error(`Brevo API error (${res.status}): ${data.message || JSON.stringify(data)}`);
-      }
-
-      console.log(`[Email Dispatcher] Delivered via Brevo HTTPS (Port 443) to: ${payload.email} (Message ID: ${data.messageId})`);
-      return {
-        success: true,
-        messageId: data.messageId || `brevo-${Date.now()}`,
-        previewFile: filePath,
-        simulated: false,
-      };
-    } catch (brevoErr: unknown) {
-      console.error(`[Email Dispatcher] Brevo HTTPS delivery failed for ${payload.email}:`, brevoErr);
-      throw brevoErr;
+      const msg = sgErr instanceof Error ? sgErr.message : String(sgErr);
+      console.warn(`[Email Dispatcher] SendGrid attempt failed: ${msg}. Attempting next provider...`);
+      dispatchErrors.push(`SendGrid: ${msg}`);
     }
   }
 
@@ -954,8 +994,9 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
         simulated: false,
       };
     } catch (resendErr: unknown) {
-      console.error(`[Email Dispatcher] Resend HTTPS delivery failed for ${payload.email}:`, resendErr);
-      throw resendErr;
+      const msg = resendErr instanceof Error ? resendErr.message : String(resendErr);
+      console.warn(`[Email Dispatcher] Resend attempt failed: ${msg}. Attempting next provider...`);
+      dispatchErrors.push(`Resend: ${msg}`);
     }
   }
 
@@ -1017,9 +1058,16 @@ export async function sendEmailForJob(payload: EmailTemplatePayload & { jobId: s
     } catch (smtpErr: unknown) {
       const errStr = String(smtpErr);
       console.error(`[Email Dispatcher] SMTP delivery failed for ${payload.email}:`, errStr);
+      if (dispatchErrors.length > 0) {
+        throw new Error(`Email dispatch failed across all providers: ${dispatchErrors.join(' | ')} | SMTP: ${errStr}`);
+      }
       throw smtpErr;
     }
   } else {
+    if (dispatchErrors.length > 0) {
+      throw new Error(`Email dispatch failed: ${dispatchErrors.join(' | ')}`);
+    }
+
     // Development fallback
     console.log(`\n======================================================`);
     console.log(`[DESLA AUTOMATED NEWSLETTER DISPATCH]`);

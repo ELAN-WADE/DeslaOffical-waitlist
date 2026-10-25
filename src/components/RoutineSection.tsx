@@ -13,26 +13,38 @@ const ROUTINE_STEPS = [
   {
     step: '01',
     name: 'Cleanse',
-    title: 'Purify Without Stripping',
-    description: 'Sulfate-free gel-to-milk cleanser that lifts pollutants while protecting the acid mantle.',
-    melaninNote: 'Prevents barrier micro-tears that trigger chronic dryness and dark spots.',
-    image: '/portraits/cleanse-ritual.jpg',
+    title: 'Melt Impurities & Clarify',
+    description: 'A gentle botanical oil cleanse that dissolves daily impurities and environmental buildup while keeping the barrier calm.',
+    melaninNote: 'Protects natural skin lipids to prevent inflammation and reactive hyperpigmentation.',
+    image: '/images/desla-studio-oil-model.jpg',
+    objectPosition: 'center 15%',
   },
   {
     step: '02',
-    name: 'Moisturize',
-    title: 'Deeply Quench & Seal',
-    description: 'Layered botanical ceramides and multi-chain hyaluronic acid that deliver lasting bounce.',
-    melaninNote: 'Counters rapid trans-epidermal water loss (TEWL) to eliminate ashy dullness.',
-    image: '/portraits/melanin-routine.jpg',
+    name: 'Wash',
+    title: 'Purify & Balance',
+    description: 'A silky, pH-balanced hydrating wash that cleanses deeply without stripping natural moisture, leaving skin fresh and soft.',
+    melaninNote: 'Maintains healthy acid mantle integrity to eliminate dry, tight discomfort.',
+    image: '/images/desla-body-lotion.jpg',
+    objectPosition: 'center 25%',
   },
   {
     step: '03',
+    name: 'Moisturize',
+    title: 'Deep Quench & Seal',
+    description: 'Layered restorative plant butters and nourishing oils that lock in deep hydration and lasting touchable softness.',
+    melaninNote: 'Counters rapid trans-epidermal water loss (TEWL) to deliver lasting bounce and radiance.',
+    image: '/images/desla-studio-butter-apply.jpg',
+    objectPosition: 'center 20%',
+  },
+  {
+    step: '04',
     name: 'Protect',
-    title: 'Shield Completely Invisible',
-    description: 'Broad-spectrum SPF 50+ defense calibrated to melt into deeper complexions with zero chalky cast.',
-    melaninNote: 'Blocks UV rays from darkening spots and preserves natural collagen integrity.',
-    image: '/portraits/melanin-glow.jpg',
+    title: 'Shield & Glow',
+    description: 'Daily environmental barrier defense that seals in lasting moisture and enhances your skin’s natural, luminous glow.',
+    melaninNote: 'Shields skin against tropical dryness and preserves natural collagen integrity.',
+    image: '/images/desla-glow-model.jpg',
+    objectPosition: 'center 20%',
   },
 ];
 
@@ -68,7 +80,7 @@ export const RoutineSection: React.FC<RoutineSectionProps> = ({ onJoinRoutine })
 
   return (
     <section id="routine" className="relative py-12 sm:py-16 bg-[#FBF9F5] border-b border-[#E8E2D8]/70">
-      <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with calibrated font sizing */}
         <div className="text-center max-w-xl mx-auto mb-10 sm:mb-16">
@@ -80,21 +92,21 @@ export const RoutineSection: React.FC<RoutineSectionProps> = ({ onJoinRoutine })
           </span>
 
           <h2 className="font-manrope text-xl sm:text-2xl lg:text-3xl font-medium text-[#111112] tracking-tight mb-2.5">
-            The Three-Step Daily Baseline
+            The Four-Step Daily Baseline
           </h2>
           <p 
             className="text-xs sm:text-sm text-[#666360] leading-relaxed max-w-md mx-auto"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            No overwhelming 10-step regimens. Desla! focuses on three essential pillars designed to protect, nourish, and honor melanin-rich skin.
+            No overwhelming 10-step regimens. Desla! focuses on four essential pillars designed to cleanse, wash, moisturize, and protect natural skin.
           </p>
         </div>
 
         {/* ================= MOBILE SLIDER VIEW (< md) ================= */}
-        {/* 1-Card Slider with ~65% reduced height and touch swipe */}
+        {/* 1-Card Slider with calibrated height and touch swipe */}
         <div className="md:hidden mb-12">
           <div 
-            className="relative h-[240px] rounded-2xl overflow-hidden bg-[#111112] shadow-md"
+            className="relative h-[290px] sm:h-[330px] rounded-2xl overflow-hidden bg-[#111112] shadow-md"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
@@ -107,11 +119,12 @@ export const RoutineSection: React.FC<RoutineSectionProps> = ({ onJoinRoutine })
                 transition={{ duration: 0.35, ease: 'easeOut' }}
                 className="w-full h-full relative"
               >
-                {/* Background Picture with calibrated 65% height */}
+                {/* Background Picture with calibrated focal position */}
                 <img
                   src={currentStep.image}
                   alt={currentStep.title}
-                  className="w-full h-full object-cover object-center opacity-90"
+                  style={{ objectPosition: currentStep.objectPosition }}
+                  className="w-full h-full object-cover opacity-90"
                 />
 
                 {/* Step indicator header */}
@@ -185,19 +198,20 @@ export const RoutineSection: React.FC<RoutineSectionProps> = ({ onJoinRoutine })
           </div>
         </div>
 
-        {/* ================= DESKTOP 3-COLUMN GRID (md and above) ================= */}
-        <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8 mb-14">
+        {/* ================= DESKTOP 4-COLUMN GRID (md and above) ================= */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mb-14">
           {ROUTINE_STEPS.map((step) => {
             return (
               <div 
                 key={step.step}
                 className="group relative aspect-[3/4] sm:aspect-[4/5] rounded-3xl overflow-hidden bg-[#111112] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer"
               >
-                {/* Full Bleed Picture */}
+                {/* Full Bleed Picture with calibrated focal position */}
                 <img
                   src={step.image}
                   alt={step.title}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                  style={{ objectPosition: step.objectPosition }}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                 />
 
                 {/* Minimalist Step Label */}

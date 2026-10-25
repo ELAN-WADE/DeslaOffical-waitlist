@@ -26,16 +26,16 @@ const STORY_SLIDES: StorySlide[] = [
   {
     id: 'product',
     role: 'shopper',
-    badge: 'Clinical Formulations',
-    title: 'Clinical Commerce & Authentic Formulations',
-    tagline: 'Climate-balanced skincare for melanin depths IV through VI.',
-    description: 'Every formulation is cold-blended in certified cleanrooms without hydroquinone, mercury, or harsh steroids. Tested in high-UV and tropical humidity environments.',
-    image: '/product_barrier_cream.jpg',
-    imageAlt: 'Clinical barrier formulation specimen and packaging',
+    badge: 'Natural Formulations',
+    title: 'Natural Care & Authentic Formulations',
+    tagline: 'Thoughtful skincare formulated for natural radiance and balance.',
+    description: 'Every formulation is cold-blended with pure botanical oils and restorative plant butters. Clean, nourishing formulations tested for everyday radiance.',
+    image: '/images/desla-natural-formulation.jpg',
+    imageAlt: 'Natural barrier formulation and packaging',
     features: [
-      '100% NAFDAC certified formulation safety',
-      'Bio-identical ceramide lipids NP and AP',
-      'Clinical shade match and humidity stability',
+      '100% certified formulation safety',
+      'Rich nourishing plant butters and botanical oils',
+      'Natural glow and lasting humidity comfort',
     ],
     ctaText: 'Explore Formulations',
   },
@@ -46,8 +46,8 @@ const STORY_SLIDES: StorySlide[] = [
     title: 'Creator Studio & PR Gifting Suite',
     tagline: 'Honest reviews, embargoed drops, and real-time revenue splits.',
     description: 'Verified beauty creators, licensed estheticians, and skin educators receive pre-release PR testing suites, formulation lookbooks, and transparent commission payouts.',
-    image: '/tile_create_studio.jpg',
-    imageAlt: 'Beauty creator studio and content testing environment',
+    image: '/images/desla-studio-trio.jpg',
+    imageAlt: 'Desla creator collective and brand ambassadors',
     features: [
       'Embargoed PR unboxing suites before public release',
       'Direct affiliate commissions with instant settlement',
@@ -58,12 +58,12 @@ const STORY_SLIDES: StorySlide[] = [
   {
     id: 'distributor',
     role: 'distributor',
-    badge: 'Clinic & Distribution',
-    title: 'Distributor Hub & Clinic Dispensary',
-    tagline: 'Priority wholesale allocations for licensed aesthetic practices.',
-    description: 'Regional stockists, dermatology clinics, and aesthetic spas gain guaranteed inventory runs, verifiable batch certificates, and tiered volume pricing.',
-    image: '/tile_dist_inventory.jpg',
-    imageAlt: 'Distributor inventory and clinic dispensary hub',
+    badge: 'Distribution & Stockists',
+    title: 'Distributor Hub & Retail Partners',
+    tagline: 'Priority wholesale allocations for regional stockists and retailers.',
+    description: 'Regional stockists, retail partners, and beauty distributors gain guaranteed inventory runs, verifiable batch certificates, and tiered volume pricing.',
+    image: '/images/desla-distributor-bag.jpg',
+    imageAlt: 'Desla distributor bag and luxury wholesale allocation',
     features: [
       'Guaranteed bulk lot reservations and priority dispatch',
       'Direct ex-factory pricing tiers with account concierge',
@@ -122,13 +122,13 @@ export const EcosystemStorySection: React.FC<EcosystemStorySectionProps> = ({ on
             Affiliation Programs
           </span>
           <h2 className="font-manrope text-xl sm:text-2xl lg:text-3xl font-medium text-[#111112] tracking-tight mb-2.5">
-            Partnerships & Clinical Distribution
+            Partnerships & Distribution
           </h2>
           <p 
             className="text-xs sm:text-[13px] text-[#666360] leading-relaxed max-w-md mx-auto"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            Explore the unified operational ecosystem behind Desla — from honest educator partnerships to clinic dispensary allocations and AI skin diagnostics.
+            Explore the unified operational ecosystem behind Desla — from honest educator partnerships to distribution allocations and AI skin diagnostics.
           </p>
         </div>
 

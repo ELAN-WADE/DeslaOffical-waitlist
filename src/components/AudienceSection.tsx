@@ -52,7 +52,7 @@ export const AudienceSection: React.FC<AudienceSectionProps> = ({ onSelectRole }
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#B89248] shrink-0" />
-                  <span>Simple 3-step daily routine guidance</span>
+                  <span>Simple 4-step daily routine guidance</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-[#B89248] shrink-0" />

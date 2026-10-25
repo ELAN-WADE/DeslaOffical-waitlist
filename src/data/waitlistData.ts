@@ -66,7 +66,7 @@ export const PRODUCT_CHAPTERS: ProductChapter[] = [
     number: '02',
     tag: 'AI SKIN INTELLIGENCE',
     title: 'Computer-Vision Diagnostics, Not Questionnaires',
-    description: 'Our proprietary multi-spectrum vision engine analyzes micro-texture, barrier integrity, and UV vulnerability in seconds—delivering custom clinical routines without clinical sterility.',
+    description: 'Our proprietary multi-spectrum vision engine analyzes micro-texture, barrier integrity, and UV vulnerability in seconds—delivering custom, tailored natural skincare routines.',
     features: [
       'Real-time moisture barrier & inflammation telemetry',
       'Tropical humidity & UV resistance index matching',
@@ -137,7 +137,7 @@ export const CONCIERGE_DEMOS = [
 export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "What is launching?",
-    answer: "Desla! is launching an intentional skincare, body care, and beauty platform specifically formulated for melanin-rich skin. We are introducing our opening collection of barrier-restoring essentials (including our Peptide Bio-Glaze Serum and Barrier Recovery Cream), clear SPF protection with zero white cast, simple 3-step daily routine guidance, and an authentic beauty community."
+    answer: "Desla! is launching an intentional skincare, body care, and beauty platform specifically formulated for melanin-rich skin. We are introducing our opening collection of barrier-restoring essentials (including our Peptide Bio-Glaze Serum and Barrier Recovery Cream), clear SPF protection with zero white cast, simple 4-step daily routine guidance, and an authentic beauty community."
   },
   {
     question: "Who can join the waitlist?",

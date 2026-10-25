@@ -147,7 +147,7 @@ export const EcosystemSection: React.FC<EcosystemSectionProps> = ({
                 <div className="space-y-1 text-xs text-[#111112]">
                   <div className="flex justify-between">
                     <span className="text-[#666360]">Batch Units:</span>
-                    <span>Bio-Glaze Serums (240 Units)</span>
+                    <span>Safe Haven Formulations (240 Units)</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#666360]">Verification:</span>

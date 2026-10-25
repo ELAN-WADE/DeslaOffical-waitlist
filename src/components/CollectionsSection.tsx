@@ -17,44 +17,44 @@ const FEATURED_SPECIMENS = [
     title: 'PIX™ Optical Skin Diagnostics',
     category: 'Diagnostic Telemetry',
     actives: 'Computer-Vision Face Mesh • TEWL Hydration Telemetry',
-    description: 'Non-invasive optical scanner calibrated for melanin depths IV–VI. Analyzes barrier integrity, moisture retention, and tone uniformity in 60 seconds.',
+    description: 'Non-invasive optical scanner calibrated for natural skin depths. Analyzes barrier integrity, moisture retention, and tone uniformity in 60 seconds.',
     isAiScan: true,
   },
   {
-    id: 'golden-oil',
-    src: '/card_6_golden_oil.jpg',
-    alt: 'Radiant Golden Botanical Body Oil',
-    title: 'Radiant Golden Botanical Oil',
-    category: 'Botanical Lipids',
-    actives: 'Kalahari Melon • Pure Jojoba • Vitamin E',
-    description: 'Cold-pressed botanical dry oil that seals moisture, counters trans-epidermal water loss, and gives an authentic non-greasy glow.',
+    id: 'safe-haven-oil',
+    src: '/images/desla-studio-oil-model.jpg',
+    alt: 'Desla! Safe Haven Body Oil',
+    title: 'Desla! Safe Haven Body Oil',
+    category: 'Botanical Nourishment',
+    actives: 'Nourish • Soften • Glow • 200ml',
+    description: 'Cold-pressed botanical dry body oil that seals in moisture, restores natural glow, and leaves skin supple, radiant, and luminous.',
   },
   {
-    id: 'barrier-cream',
-    src: '/product_barrier_cream.jpg',
-    alt: 'Bio-Active Barrier Recovery Cream',
-    title: 'Bio-Active Barrier Cream',
-    category: 'Lipid Repair',
-    actives: 'Ceramides NP/AP • Squalane • Ectoin',
-    description: 'Restorative barrier emulsion in airtight packaging designed for equatorial resilience, calming irritation and locking in 72-hour hydration.',
+    id: 'safe-haven-butter',
+    src: '/images/desla-studio-butter-apply.jpg',
+    alt: 'Desla! Safe Haven Body Butter',
+    title: 'Desla! Safe Haven Body Butter',
+    category: 'Deep Nourishment',
+    actives: 'Deep Nourishment • Lasting Softness • 200ml',
+    description: 'Ultra-rich nourishing body butter that provides lasting softness, restores skin comfort, and locks in deep, enduring hydration.',
   },
   {
-    id: 'cleanser',
-    src: '/product_cleanser.jpg',
-    alt: 'Gentle Barrier Face Cleanser',
-    title: 'Gentle Barrier Face Cleanser',
-    category: 'Purifying Ritual',
-    actives: 'Sulfate-Free Amino Acids • Botanical Centella',
-    description: 'Sulfate-free pH-balanced wash that purifies pollutants without stripping natural sebum or triggering reactive hyperpigmentation.',
+    id: 'safe-haven-lotion',
+    src: '/images/desla-body-lotion.jpg',
+    alt: 'Desla! Safe Haven Body Lotion',
+    title: 'Desla! Safe Haven Body Lotion',
+    category: 'Daily Luxury Care',
+    actives: 'Nourish • Soften • Glow • 300ml',
+    description: 'Lightweight everyday body lotion offering an immediate moment of luxury, all-day hydration, and non-greasy softness.',
   },
   {
-    id: 'sunscreen',
-    src: '/product_sunscreen.jpg',
-    alt: 'Invisible Shield Sunscreen SPF50+',
-    title: 'Invisible Shield Sunscreen SPF 50+',
-    category: 'UV Defense',
-    actives: 'Broad-Spectrum SPF50+ • Antioxidant Ectoin',
-    description: 'Melt-in daily sun defense calibrated for deeper skin complexions with zero chalky residue and an invisible natural finish.',
+    id: 'lifestyle-set',
+    src: '/images/desla-studio-couple-collection.jpg',
+    alt: 'Desla! Complete Ritual Collection',
+    title: 'Desla! Complete Ritual Collection',
+    category: 'Complete Ritual Set',
+    actives: 'Body Butter • Body Lotion • Body Scrub',
+    description: 'The complete Desla! lifestyle set featuring our signature Safe Haven trio, packaged in an elegant custom luxury gift bag.',
   },
 ];
 
@@ -72,7 +72,7 @@ export const CollectionsSection: React.FC<CollectionsSectionProps> = ({ onGetUpd
             className="text-[11px] font-semibold tracking-[0.25em] uppercase text-[#7A7672] mb-3 block"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            Tactile Specimens
+            Signature Formulations
           </span>
 
           <h2 className="font-manrope text-xl sm:text-2xl lg:text-3xl font-medium text-[#111112] tracking-tight mb-2.5">
@@ -82,7 +82,7 @@ export const CollectionsSection: React.FC<CollectionsSectionProps> = ({ onGetUpd
             className="text-xs sm:text-[13px] text-[#666360] leading-relaxed max-w-md mx-auto"
             style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
           >
-            A tactile preview of our debut formulations. Interactive physical specimens engineered with bio-identical lipids for equatorial resilience.
+            A tactile preview of our debut formulations. Thoughtful skincare formulated with pure botanical oils and restorative plant butters.
           </p>
         </div>
 

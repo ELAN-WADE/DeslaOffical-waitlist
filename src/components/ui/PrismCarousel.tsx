@@ -158,11 +158,11 @@ export default function PrismCarousel({
               aria-roledescription="slide"
               aria-label={`${item.title} (${index + 1} of ${total})`}
             >
-              {/* Image */}
+              {/* Full-bleed image filling the entire container */}
               <img
                 src={item.src}
                 alt={item.alt || item.title}
-                className="w-full h-full object-cover object-top select-none"
+                className="w-full h-full object-cover object-center select-none"
                 loading="eager"
                 draggable={false}
               />

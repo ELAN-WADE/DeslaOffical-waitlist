@@ -41,7 +41,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onJoinClick }) => 
             </span>
             <ul className="space-y-2 text-white/70">
               <li><a href="#affiliates" className="hover:text-white transition-colors">Affiliation Programs</a></li>
-              <li><a href="#offerings" className="hover:text-white transition-colors">Featured Specimens</a></li>
+              <li><a href="#offerings" className="hover:text-white transition-colors">Featured Collection</a></li>
               <li><a href="#routine" className="hover:text-white transition-colors">Daily Routine</a></li>
               <li><a href="#brand-story" className="hover:text-white transition-colors">Brand Philosophy</a></li>
               <li><a href="#faqs" className="hover:text-white transition-colors">FAQs</a></li>

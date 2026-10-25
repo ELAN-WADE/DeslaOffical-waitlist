@@ -715,7 +715,7 @@ export default function SecureAdminPage() {
                   <option value="shopper">Shopper Cohort Only</option>
                   <option value="creator">Creator Atelier Only</option>
                   <option value="distributor">Commercial Distributors Only</option>
-                  <option value="partner">Clinical Partners Only</option>
+                  <option value="partner">Brand & Formulation Partners Only</option>
                 </select>
               </div>
 
