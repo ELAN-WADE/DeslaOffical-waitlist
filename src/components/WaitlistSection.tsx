@@ -182,6 +182,7 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
   const roleLabels: Record<RoleType, string> = {
     shopper: 'Beauty Shopper',
     creator: 'Beauty Creator',
+    ambassador: 'Brand Ambassador',
     distributor: 'Distributor / Stockist',
     partner: 'Institutional Partner',
   };
@@ -249,11 +250,11 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
                   
                   {/* Priority Pathway Minimalist Selector */}
                   <div>
-                    <label htmlFor="waitlist-role-select" className="block text-xs font-medium text-[#111112] mb-1.5">
+                    <label htmlFor="waitlist-priority-select" className="block text-xs font-medium text-[#111112] mb-1.5">
                       Priority Pathway
                     </label>
                     <select
-                      id="waitlist-role-select"
+                      id="waitlist-priority-select"
                       value={selectedRole}
                       onChange={(e) => {
                         setSelectedRole(e.target.value as RoleType);
@@ -262,9 +263,10 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
                       disabled={isSubmitting}
                       className="w-full px-4 py-3.5 rounded-2xl bg-[#FBF9F5] border border-[#D1C9BE] text-sm text-[#111112] transition-all min-h-[48px] focus:outline-none focus:ring-2 focus:ring-[#B89248] focus:border-[#B89248] cursor-pointer"
                     >
-                      <option value="shopper">Shopper & Melanin Skincare Enthusiast</option>
+                      <option value="shopper">Shopper & Skincare Enthusiast</option>
                       <option value="creator">Beauty Creator, MUA & Skin Educator (PR Drops)</option>
-                      <option value="distributor">Licensed Clinic, Spa & Stockist (B2B Wholesale)</option>
+                      <option value="ambassador">Brand Ambassador</option>
+                      <option value="distributor">Licensed Distributor, Spa & Stockist (B2B Wholesale)</option>
                     </select>
                   </div>
                   
@@ -336,6 +338,7 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
                       >
                         <option value="shopper">Beauty Enthusiast & Shopper</option>
                         <option value="creator">Beauty Creator & Educator</option>
+                        <option value="ambassador">Brand Ambassador</option>
                         <option value="distributor">Distributor & Stockist</option>
                         <option value="partner">Partnership & Brand Partner</option>
                       </select>
@@ -348,7 +351,7 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
                   </div>
 
                   {/* Dynamic Role-Tailored Optional Fields */}
-                  {selectedRole === 'shopper' && (
+                  {(selectedRole === 'shopper' || selectedRole === 'ambassador') && (
                     <div>
                       <label htmlFor="waitlist-concern" className="block text-xs font-medium text-[#111112] mb-1.5">
                         Primary Skin Concern <span className="text-[11px] text-[#9E9A95] font-normal">(Optional)</span>
@@ -369,7 +372,7 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
                     </div>
                   )}
 
-                  {selectedRole === 'creator' && (
+                  {(selectedRole === 'creator' || selectedRole === 'ambassador') && (
                     <div>
                       <div className="flex items-center justify-between mb-1.5">
                         <label htmlFor="waitlist-handle" className="text-xs font-medium text-[#111112]">

@@ -158,7 +158,25 @@ export function generateEmailHtml(data: EmailTemplatePayload): { subject: string
       </div>
     `;
   }
-  // 4. PRIVATE SHOPPER / CONSUMER (DEFAULT)
+  // 4. BRAND AMBASSADOR
+  else if (data.role === 'ambassador') {
+    subject = `Welcome to the Desla Brand Ambassador Program, ${firstName}`;
+    roleTitle = 'Brand Ambassador';
+    mainBodyText = `Thank you for joining as a Desla Brand Ambassador. We collaborate with passionate voices and community advocates who embody authentic beauty, natural skin health, and clean botanical care.`;
+    privilegesList = `
+      <div style="margin: 28px 0; padding-top: 20px; border-top: 1px solid #EAE6DF;">
+        <p style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #8A8580; margin: 0 0 12px 0;">
+          Ambassador Inclusions
+        </p>
+        <p style="font-size: 13.5px; line-height: 1.8; color: #3A3835; margin: 0;">
+          &bull; Complimentary preview gifting of upcoming Desla Safe Haven launches.<br/>
+          &bull; Dedicated affiliate community link with custom commission perks.<br/>
+          &bull; Invitations to private brand storytelling and preview masterclasses.
+        </p>
+      </div>
+    `;
+  }
+  // 5. PRIVATE SHOPPER / CONSUMER (DEFAULT)
   else {
     subject = `Welcome to Desla, ${firstName} - your reservation is confirmed`;
     roleTitle = 'Founding Member';

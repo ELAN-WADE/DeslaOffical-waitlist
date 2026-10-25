@@ -22,9 +22,9 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onJoinClick }) => 
           <div className="md:col-span-5">
             <a href="#" className="inline-block mb-3" aria-label="Desla! Homepage">
               <img 
-                src="/desla-logo.png" 
+                src="/desla-logo-white.png" 
                 alt="Desla!" 
-                className="h-7 w-auto object-contain brightness-0 invert" 
+                className="h-7 w-auto object-contain" 
               />
             </a>
             <p className="text-xs text-[#9E9A95] max-w-sm leading-relaxed mb-4 font-light">

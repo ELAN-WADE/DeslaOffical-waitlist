@@ -17,7 +17,7 @@ const PRINCIPLES = [
     description: 'Cold-blended with restorative plant butters and botanical oils. Zero harsh sulfates, hydroquinone, steroids, or artificial fillers.',
     image: '/images/desla-studio-butter-apply.jpg',
     imageAlt: 'Model applying Desla Safe Haven nourishing body butter',
-    objectPosition: 'center 20%',
+    objectPosition: 'center 18%',
   },
   {
     title: 'Collective Radiance',
@@ -25,15 +25,15 @@ const PRINCIPLES = [
     description: 'Thoughtfully formulated for all skin depths. Celebrating natural textures, authentic tones, and shared everyday radiance.',
     image: '/images/desla-studio-trio.jpg',
     imageAlt: 'Models celebrating Desla Safe Haven clean formulations',
-    objectPosition: 'center 20%',
+    objectPosition: 'center 22%',
   },
   {
     title: 'Safe Haven Body Butter',
     tagline: 'Enduring Softness',
     description: 'Ultra-rich restorative body butter providing intense, long-lasting hydration to keep your skin smooth, supple, and comforted.',
     image: '/images/desla-body-butter.jpg',
-    imageAlt: 'Desla Safe Haven Body Butter in luxury jar packaging',
-    objectPosition: 'center center',
+    imageAlt: 'Desla Safe Haven Body Butter in luxury tube packaging',
+    objectPosition: 'center 35%',
   },
   {
     title: 'Safe Haven Body Lotion',
@@ -41,7 +41,7 @@ const PRINCIPLES = [
     description: 'Fast-absorbing, non-greasy everyday body lotion providing touchable softness, instant skin comfort, and all-day hydration.',
     image: '/images/desla-body-lotion.jpg',
     imageAlt: 'Desla Safe Haven Body Lotion daily pump formulation',
-    objectPosition: 'center 25%',
+    objectPosition: 'center 40%',
   },
   {
     title: 'The Complete Ritual',
@@ -49,7 +49,7 @@ const PRINCIPLES = [
     description: 'Experience the complete Desla ritual featuring our Body Butter, Body Lotion, and Body Scrub with full ingredient provenance.',
     image: '/images/desla-studio-couple-collection.jpg',
     imageAlt: 'Desla complete collection with Safe Haven Body Butter, Lotion, and Scrub',
-    objectPosition: 'center 20%',
+    objectPosition: 'center 18%',
   },
 ];
 
@@ -77,43 +77,53 @@ export const BrandStorySection: React.FC = () => {
           </p>
         </div>
 
-        {/* 6 Cards with Real Desla Pictures - Calibrated to show full subject */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {PRINCIPLES.map((principle, idx) => (
-            <div 
-              key={idx}
-              className="group relative h-[210px] sm:h-auto sm:aspect-[4/5] rounded-2xl overflow-hidden bg-[#161514] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-[#E8E2D8]/60 flex flex-col justify-end"
-            >
-              {/* Full-bleed background image calibrated with tailored focal position */}
-              <img
-                src={principle.image}
-                alt={principle.imageAlt}
-                style={{ objectPosition: principle.objectPosition }}
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
-              />
+        {/* Bento Grid with Calibrated Reduced Height & Tailored Focal Positions */}
+        <div className="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-5.5 max-w-[1160px] mx-auto">
+          {PRINCIPLES.map((principle, idx) => {
+            const bentoSpan = 
+              idx === 0 ? 'col-span-12 lg:col-span-7 h-[230px] sm:h-[260px] lg:h-[270px]' :
+              idx === 1 ? 'col-span-12 lg:col-span-5 h-[230px] sm:h-[260px] lg:h-[270px]' :
+              idx === 2 ? 'col-span-12 sm:col-span-6 lg:col-span-4 h-[220px] sm:h-[240px] lg:h-[250px]' :
+              idx === 3 ? 'col-span-12 sm:col-span-6 lg:col-span-4 h-[220px] sm:h-[240px] lg:h-[250px]' :
+              idx === 4 ? 'col-span-12 sm:col-span-12 lg:col-span-4 h-[220px] sm:h-[240px] lg:h-[250px]' :
+              'col-span-12 h-[210px] sm:h-[230px] lg:h-[240px]';
 
-              {/* Refined gradient scrim so text is readable without obscuring product */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#111112]/95 via-[#111112]/40 to-transparent pointer-events-none z-15" />
+            return (
+              <div 
+                key={idx}
+                className={`group relative rounded-2xl overflow-hidden bg-[#161514] shadow-xs hover:shadow-xl transition-all duration-500 cursor-pointer border border-[#E8E2D8]/70 flex flex-col justify-end ${bentoSpan}`}
+              >
+                {/* Full-bleed background image calibrated with tailored focal position */}
+                <img
+                  src={principle.image}
+                  alt={principle.imageAlt}
+                  style={{ objectPosition: principle.objectPosition }}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                />
 
-              {/* Text Overlay */}
-              <div className="relative z-20 p-5 sm:p-6 text-white flex flex-col justify-end">
-                <span className="text-[10px] font-semibold tracking-wider uppercase text-[#C5A059] mb-1">
-                  {principle.tagline}
-                </span>
+                {/* Refined gradient scrim so text is crisp without obscuring the artwork */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#111112]/95 via-[#111112]/45 to-transparent pointer-events-none z-10" />
 
-                <h3 className="font-manrope text-base sm:text-lg font-bold text-white mb-1 leading-snug">
-                  {principle.title}
-                </h3>
+                {/* Text Overlay */}
+                <div className="relative z-20 p-4.5 sm:p-5 lg:p-6 text-white flex flex-col justify-end">
+                  <span className="text-[9.5px] sm:text-[10px] font-semibold tracking-wider uppercase text-[#C5A059] mb-1">
+                    {principle.tagline}
+                  </span>
 
-                <p 
-                  className="text-[11px] sm:text-xs text-[#E8E2D8]/90 leading-relaxed"
-                  style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-                >
-                  {principle.description}
-                </p>
+                  <h3 className="font-manrope text-base sm:text-lg font-bold text-white mb-1 leading-snug">
+                    {principle.title}
+                  </h3>
+
+                  <p 
+                    className="text-[11px] sm:text-xs text-[#E8E2D8]/90 leading-relaxed max-w-xl"
+                    style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
+                  >
+                    {principle.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>

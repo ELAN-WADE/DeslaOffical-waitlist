@@ -12,7 +12,9 @@ function WaitlistContent() {
   const roleParam = searchParams.get('role');
   const validRole: RoleType = 
     roleParam === 'creator' ? 'creator' : 
-    roleParam === 'distributor' ? 'distributor' : 'shopper';
+    roleParam === 'ambassador' ? 'ambassador' :
+    roleParam === 'distributor' ? 'distributor' : 
+    roleParam === 'partner' ? 'partner' : 'shopper';
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] text-[#111112] selection:bg-[#B89248]/20 selection:text-[#111112]">

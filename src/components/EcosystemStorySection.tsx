@@ -20,6 +20,7 @@ interface StorySlide {
   imageAlt: string;
   features: string[];
   ctaText: string;
+  objectPosition?: string;
 }
 
 const STORY_SLIDES: StorySlide[] = [
@@ -31,7 +32,8 @@ const STORY_SLIDES: StorySlide[] = [
     tagline: 'Thoughtful skincare formulated for natural radiance and balance.',
     description: 'Every formulation is cold-blended with pure botanical oils and restorative plant butters. Clean, nourishing formulations tested for everyday radiance.',
     image: '/images/desla-natural-formulation.jpg',
-    imageAlt: 'Natural barrier formulation and packaging',
+    imageAlt: 'Model with glowing skin holding Desla Safe Haven Body Butter',
+    objectPosition: 'center 13%',
     features: [
       '100% certified formulation safety',
       'Rich nourishing plant butters and botanical oils',
@@ -48,6 +50,7 @@ const STORY_SLIDES: StorySlide[] = [
     description: 'Verified beauty creators, licensed estheticians, and skin educators receive pre-release PR testing suites, formulation lookbooks, and transparent commission payouts.',
     image: '/images/desla-studio-trio.jpg',
     imageAlt: 'Desla creator collective and brand ambassadors',
+    objectPosition: 'center 22%',
     features: [
       'Embargoed PR unboxing suites before public release',
       'Direct affiliate commissions with instant settlement',
@@ -64,6 +67,7 @@ const STORY_SLIDES: StorySlide[] = [
     description: 'Regional stockists, retail partners, and beauty distributors gain guaranteed inventory runs, verifiable batch certificates, and tiered volume pricing.',
     image: '/images/desla-distributor-bag.jpg',
     imageAlt: 'Desla distributor bag and luxury wholesale allocation',
+    objectPosition: 'center 48%',
     features: [
       'Guaranteed bulk lot reservations and priority dispatch',
       'Direct ex-factory pricing tiers with account concierge',
@@ -80,6 +84,7 @@ const STORY_SLIDES: StorySlide[] = [
     description: 'Trained specifically on deeper skin tones, PIX™ analyzes barrier integrity and trans-epidermal water loss (TEWL) without false readings from surface melanin.',
     image: '/beauty_face_3d.jpg',
     imageAlt: 'Melanin-calibrated skin telemetry diagnostics',
+    objectPosition: 'center center',
     features: [
       'Calibrated for equatorial UV index and humidity',
       'Barrier integrity and hydration telemetry in 60s',
@@ -135,7 +140,7 @@ export const EcosystemStorySection: React.FC<EcosystemStorySectionProps> = ({ on
         {/* ================= AUTOMATED CINEMATIC SLIDESHOW ================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left Column: Picture Crossfade with smooth entry */}
+          {/* Left Column: Picture Crossfade with smooth entry and calibrated alignment */}
           <div className="lg:col-span-6 relative">
             <div className="relative aspect-[4/3] sm:aspect-[16/11] rounded-3xl overflow-hidden bg-[#EAE4D9] shadow-sm border border-[#E8E2D8]">
               <AnimatePresence mode="wait">
@@ -150,11 +155,12 @@ export const EcosystemStorySection: React.FC<EcosystemStorySectionProps> = ({ on
                   <img
                     src={slide.image}
                     alt={slide.imageAlt}
-                    className="w-full h-full object-cover object-center"
+                    style={{ objectPosition: slide.objectPosition || 'center center' }}
+                    className="w-full h-full object-cover"
                     loading="eager"
                   />
                   {/* Subtle dark bottom vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
                 </motion.div>
               </AnimatePresence>
             </div>

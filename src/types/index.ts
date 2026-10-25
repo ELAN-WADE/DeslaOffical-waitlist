@@ -1,4 +1,4 @@
-export type RoleType = 'shopper' | 'creator' | 'distributor' | 'partner';
+export type RoleType = 'shopper' | 'creator' | 'distributor' | 'partner' | 'ambassador';
 
 export interface WaitlistFormData {
   fullName: string;

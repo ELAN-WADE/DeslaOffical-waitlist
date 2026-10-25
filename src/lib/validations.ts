@@ -24,7 +24,7 @@ export const waitlistFormSchema = z.object({
     .max(100)
     .optional()
     .default('Lagos'),
-  role: z.enum(['shopper', 'creator', 'distributor', 'partner']),
+  role: z.enum(['shopper', 'creator', 'distributor', 'partner', 'ambassador']),
   skinConcern: z.string().trim().max(150).optional().nullable(),
   creatorHandle: z.string().trim().max(100).optional().nullable(),
   creatorPlatform: z.string().trim().max(100).optional().nullable(),

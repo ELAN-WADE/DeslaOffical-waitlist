@@ -147,20 +147,11 @@ export const RoutineSection: React.FC<RoutineSectionProps> = ({ onJoinRoutine })
                   </h3>
 
                   <p 
-                    className="text-xs text-[#E8E2D8]/90 leading-relaxed mb-1.5 line-clamp-2"
+                    className="text-xs text-[#E8E2D8]/90 leading-relaxed mb-0.5"
                     style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                   >
                     {currentStep.description}
                   </p>
-
-                  <div className="pt-1 border-t border-white/15">
-                    <span className="text-[9.5px] font-semibold tracking-wider uppercase text-[#C5A059] block">
-                      Melanin Focus:
-                    </span>
-                    <p className="text-[10.5px] text-[#E8E2D8]/80 leading-tight">
-                      {currentStep.melaninNote}
-                    </p>
-                  </div>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -199,12 +190,13 @@ export const RoutineSection: React.FC<RoutineSectionProps> = ({ onJoinRoutine })
         </div>
 
         {/* ================= DESKTOP 4-COLUMN GRID (md and above) ================= */}
+        {/* Calibrated reduced height so cards are compact and pictures are placed well */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mb-14">
           {ROUTINE_STEPS.map((step) => {
             return (
               <div 
                 key={step.step}
-                className="group relative aspect-[3/4] sm:aspect-[4/5] rounded-3xl overflow-hidden bg-[#111112] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer"
+                className="group relative h-[280px] lg:h-[300px] rounded-2xl lg:rounded-3xl overflow-hidden bg-[#111112] shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer"
               >
                 {/* Full Bleed Picture with calibrated focal position */}
                 <img
@@ -222,29 +214,18 @@ export const RoutineSection: React.FC<RoutineSectionProps> = ({ onJoinRoutine })
                 {/* Gradient Overlay for Text Readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#111112] via-[#111112]/45 to-transparent z-10 pointer-events-none" />
 
-                {/* Content Overlay — Expands on Hover */}
-                <div className="absolute inset-x-0 bottom-0 p-6 z-20 text-white flex flex-col justify-end transition-all duration-300">
-                  <h3 className="font-manrope text-lg sm:text-xl font-bold text-white mb-1.5 leading-snug drop-shadow-xs">
+                {/* Content Overlay */}
+                <div className="absolute inset-x-0 bottom-0 p-5 z-20 text-white flex flex-col justify-end transition-all duration-300">
+                  <h3 className="font-manrope text-base lg:text-lg font-bold text-white mb-1.5 leading-snug drop-shadow-xs">
                     {step.title}
                   </h3>
 
                   <p 
-                    className="text-xs text-[#E8E2D8]/90 leading-relaxed mb-2 line-clamp-2 group-hover:line-clamp-none transition-all duration-300"
+                    className="text-xs text-[#E8E2D8]/90 leading-relaxed"
                     style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                   >
                     {step.description}
                   </p>
-
-                  <div className="max-h-0 opacity-0 group-hover:max-h-24 group-hover:opacity-100 overflow-hidden transition-all duration-500 pt-1">
-                    <div className="pt-2 border-t border-white/20">
-                      <span className="text-[10px] font-semibold tracking-wider uppercase text-[#C5A059] block mb-0.5">
-                        Melanin Focus:
-                      </span>
-                      <p className="text-[11px] text-[#E8E2D8]/80 leading-snug">
-                        {step.melaninNote}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             );

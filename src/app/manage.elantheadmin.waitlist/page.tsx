@@ -714,6 +714,7 @@ export default function SecureAdminPage() {
                   <option value="all">All Registered Members (Global Broadcast)</option>
                   <option value="shopper">Shopper Cohort Only</option>
                   <option value="creator">Creator Atelier Only</option>
+                  <option value="ambassador">Brand Ambassador Cohort Only</option>
                   <option value="distributor">Commercial Distributors Only</option>
                   <option value="partner">Brand & Formulation Partners Only</option>
                 </select>
@@ -841,6 +842,7 @@ export default function SecureAdminPage() {
                 <option value="all">All Roles</option>
                 <option value="shopper">Shopper</option>
                 <option value="creator">Creator</option>
+                <option value="ambassador">Ambassador</option>
                 <option value="distributor">Distributor</option>
                 <option value="partner">Partner</option>
               </select>
