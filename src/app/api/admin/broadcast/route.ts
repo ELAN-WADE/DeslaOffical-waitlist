@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { triggerBackgroundWorker } from '@/lib/worker';
 import { verifyAdminRequest } from '@/lib/admin-auth';
+import { isSupabaseConfigured, supabaseQueueBroadcast, supabaseRest } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +37,28 @@ export async function POST(request: Request) {
         { success: false, error: 'Message content is required.' },
         { status: 400 }
       );
+    }
+
+    // =========================================================================
+    // SUPABASE SERVERLESS PATH
+    // =========================================================================
+    if (isSupabaseConfigured()) {
+      const res = await supabaseQueueBroadcast({
+        subject: subject.trim(),
+        headline: headline.trim(),
+        messageBody: messageBody.trim(),
+        targetRole,
+        ctaText: callToActionText.trim(),
+        ctaUrl: callToActionUrl.trim(),
+      });
+
+      triggerBackgroundWorker();
+
+      return NextResponse.json({
+        success: true,
+        queuedCount: res.queuedCount,
+        message: `Successfully queued announcement to ${res.queuedCount} ${targetRole === 'all' ? 'members' : targetRole + 's'}.`,
+      });
     }
 
     const db = getDb();
@@ -128,6 +151,16 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
+    if (isSupabaseConfigured()) {
+      const recentBroadcasts = await supabaseRest<any[]>(
+        'email_jobs?template_type=eq.broadcast&order=created_at.desc&limit=30'
+      );
+      return NextResponse.json({
+        success: true,
+        recentBroadcasts,
+      });
+    }
+
     const db = getDb();
     const recentBroadcasts = db.prepare(`
       SELECT id, subject, recipient_name, recipient_email, role, status, attempts, created_at

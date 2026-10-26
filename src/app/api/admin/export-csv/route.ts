@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { verifyAdminRequest } from '@/lib/admin-auth';
+import { isSupabaseConfigured, supabaseGetExportData } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,42 +25,48 @@ export async function GET(request: Request) {
   }
 
   try {
-    const db = getDb();
+    let records: any[] = [];
 
-    // Deduplicated waitlist query: joins only the latest email job per member
-    const records = db.prepare(`
-      SELECT 
-        w.queue_number,
-        w.full_name,
-        w.email,
-        w.role,
-        w.city,
-        w.skin_concern,
-        w.creator_handle,
-        w.creator_platform,
-        w.distributor_business,
-        w.distributor_volume,
-        w.partner_organization,
-        w.partner_focus,
-        w.referral_code,
-        w.status as member_status,
-        w.created_at,
-        ej.status as email_status,
-        ej.sent_at as email_sent_at,
-        ej.last_error as email_error
-      FROM waitlist w
-      LEFT JOIN (
+    if (isSupabaseConfigured()) {
+      records = await supabaseGetExportData();
+    } else {
+      const db = getDb();
+
+      // Deduplicated waitlist query: joins only the latest email job per member
+      records = db.prepare(`
         SELECT 
-          waitlist_id,
-          status,
-          attempts,
-          sent_at,
-          last_error,
-          ROW_NUMBER() OVER (PARTITION BY waitlist_id ORDER BY created_at DESC) as rn
-        FROM email_jobs
-      ) ej ON w.id = ej.waitlist_id AND ej.rn = 1
-      ORDER BY w.queue_number ASC
-    `).all() as any[];
+          w.queue_number,
+          w.full_name,
+          w.email,
+          w.role,
+          w.city,
+          w.skin_concern,
+          w.creator_handle,
+          w.creator_platform,
+          w.distributor_business,
+          w.distributor_volume,
+          w.partner_organization,
+          w.partner_focus,
+          w.referral_code,
+          w.status as member_status,
+          w.created_at,
+          ej.status as email_status,
+          ej.sent_at as email_sent_at,
+          ej.last_error as email_error
+        FROM waitlist w
+        LEFT JOIN (
+          SELECT 
+            waitlist_id,
+            status,
+            attempts,
+            sent_at,
+            last_error,
+            ROW_NUMBER() OVER (PARTITION BY waitlist_id ORDER BY created_at DESC) as rn
+          FROM email_jobs
+        ) ej ON w.id = ej.waitlist_id AND ej.rn = 1
+        ORDER BY w.queue_number ASC
+      `).all() as any[];
+    }
 
     const headers = [
       'Queue #',

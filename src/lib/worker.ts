@@ -1,5 +1,6 @@
 import { getDb } from './db';
 import { sendEmailForJob } from './email-service';
+import { isSupabaseConfigured, supabaseGetPendingEmailJobs, supabaseUpdateEmailJob } from './supabase';
 import type { WaitlistEntry } from '../types';
 
 export interface ProcessResult {
@@ -74,6 +75,69 @@ export function enqueueEmailJob(entry: WaitlistEntry, existingDb?: ReturnType<ty
 }
 
 export async function processEmailJobs(limit = 10): Promise<ProcessResult> {
+  // =========================================================================
+  // SUPABASE SERVERLESS PROCESSOR
+  // =========================================================================
+  if (isSupabaseConfigured()) {
+    const pendingJobs = await supabaseGetPendingEmailJobs(limit);
+    const result: ProcessResult = {
+      processed: pendingJobs.length,
+      succeeded: 0,
+      failed: 0,
+      details: [],
+    };
+
+    for (const job of pendingJobs) {
+      await supabaseUpdateEmailJob(job.id, { status: 'processing' });
+
+      try {
+        const payload = typeof job.payload_json === 'string' ? JSON.parse(job.payload_json) : job.payload_json;
+        await sendEmailForJob({
+          ...payload,
+          jobId: job.id,
+          templateType: job.template_type || payload.templateType,
+          customSubject: payload.customSubject || job.subject,
+        });
+
+        await supabaseUpdateEmailJob(job.id, {
+          status: 'sent',
+          sent_at: new Date().toISOString(),
+          last_error: null,
+        });
+
+        result.succeeded++;
+        result.details.push({
+          jobId: job.id,
+          email: job.recipient_email,
+          status: 'sent',
+        });
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        const newAttempts = (job.attempts || 0) + 1;
+        const newStatus = newAttempts >= (job.max_attempts || 3) ? 'failed' : 'pending';
+
+        await supabaseUpdateEmailJob(job.id, {
+          status: newStatus,
+          attempts: newAttempts,
+          last_error: errorMessage,
+        });
+
+        result.failed++;
+        result.details.push({
+          jobId: job.id,
+          email: job.recipient_email,
+          status: 'failed',
+          error: errorMessage,
+        });
+      }
+    }
+
+    return result;
+  }
+
+  // =========================================================================
+  // LOCAL SQLITE PROCESSOR
+  // =========================================================================
   const db = getDb();
 
   // Find pending jobs that have not exceeded max_attempts

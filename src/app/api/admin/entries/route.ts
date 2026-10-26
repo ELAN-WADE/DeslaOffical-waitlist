@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { verifyAdminRequest } from '@/lib/admin-auth';
+import { 
+  isSupabaseConfigured, 
+  supabaseGetAdminEntries, 
+  supabaseGetRecentJobs, 
+  supabaseGetAdminStats 
+} from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +19,21 @@ export async function GET(request: Request) {
   }
 
   try {
+    if (isSupabaseConfigured()) {
+      const [entries, jobs, stats] = await Promise.all([
+        supabaseGetAdminEntries(100),
+        supabaseGetRecentJobs(50),
+        supabaseGetAdminStats(),
+      ]);
+
+      return NextResponse.json({
+        success: true,
+        stats,
+        entries,
+        recentJobs: jobs,
+      });
+    }
+
     const db = getDb();
 
     // Query each waitlist member exactly once with their latest email job status

@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "worker": "node src/scripts/worker-runner.mjs",
-    "test:smtp": "node src/scripts/test-smtp.mjs"
+    "test:smtp": "node src/scripts/test-smtp.mjs",
+    "migrate:supabase": "node scripts/migrate-sqlite-to-supabase.mjs"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.3",

@@ -3,6 +3,12 @@ import { getDb } from '@/lib/db';
 import { waitlistFormSchema } from '@/lib/validations';
 import { enqueueEmailJob, triggerBackgroundWorker } from '@/lib/worker';
 import { sendEmailForJob } from '@/lib/email-service';
+import { 
+  isSupabaseConfigured, 
+  supabaseReserveWaitlistSpot, 
+  supabaseGetWaitlistStats, 
+  supabaseUpdateEmailJob 
+} from '@/lib/supabase';
 import type { WaitlistEntry } from '@/types';
 
 // In-memory sliding window rate limiter: max 20 submissions per minute per IP for testing flexibility
@@ -80,8 +86,75 @@ export async function POST(request: Request) {
         ? firstName.trim() 
         : 'Desla Member';
 
-    const db = getDb();
     const userAgent = request.headers.get('user-agent') || 'Unknown';
+
+    // =========================================================================
+    // SUPABASE SERVERLESS PATH (Production Cloud Architecture)
+    // =========================================================================
+    if (isSupabaseConfigured()) {
+      const result = await supabaseReserveWaitlistSpot({
+        fullName: resolvedFullName,
+        email: email.toLowerCase().trim(),
+        city,
+        role,
+        skinConcern: skinConcern || undefined,
+        creatorHandle: creatorHandle || undefined,
+        creatorPlatform: creatorPlatform || undefined,
+        distributorBusiness: distributorBusiness || undefined,
+        distributorVolume: distributorVolume || undefined,
+        partnerOrganization: partnerOrganization || undefined,
+        partnerFocus: partnerFocus || undefined,
+        ipAddress: ip,
+        userAgent,
+      });
+
+      // Synchronous email dispatch for immediate inbox arrival
+      try {
+        await sendEmailForJob({
+          fullName: result.entry.fullName,
+          email: result.entry.email,
+          role: result.entry.role,
+          queueNumber: result.entry.queueNumber,
+          referralCode: result.entry.referralCode,
+          city: result.entry.city,
+          skinConcern: result.entry.skinConcern || null,
+          creatorHandle: result.entry.creatorHandle || null,
+          creatorPlatform: result.entry.creatorPlatform || null,
+          distributorBusiness: result.entry.distributorBusiness || null,
+          distributorVolume: result.entry.distributorVolume || null,
+          partnerOrganization: result.entry.partnerOrganization || null,
+          partnerFocus: result.entry.partnerFocus || null,
+          jobId: result.job_id,
+        });
+
+        await supabaseUpdateEmailJob(result.job_id, {
+          status: 'sent',
+          sent_at: new Date().toISOString(),
+        });
+        console.log(`[Waitlist API - Supabase] Email dispatched synchronously to ${result.entry.email}`);
+      } catch (sendErr) {
+        console.error('[Waitlist API - Supabase] Synchronous dispatch error, worker will retry:', sendErr);
+        triggerBackgroundWorker();
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          isExisting: result.is_existing,
+          message: result.is_existing
+            ? `Your reservation has been confirmed for the ${role.toUpperCase()} role. A personalized confirmation email has been dispatched to your inbox.`
+            : 'Your spot has been reserved. Confirmation email has been delivered to your inbox.',
+          entry: result.entry,
+          jobId: result.job_id,
+        },
+        { status: result.is_existing ? 200 : 201 }
+      );
+    }
+
+    // =========================================================================
+    // LOCAL SQLITE FALLBACK PATH (Offline Local Development)
+    // =========================================================================
+    const db = getDb();
 
     // 4. Check if email already registered: if so, update their role & preferences, and DISPATCH an email immediately!
     const existing = db.prepare('SELECT * FROM waitlist WHERE email = ?').get(email) as any;
@@ -352,6 +425,14 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
+    if (isSupabaseConfigured()) {
+      const stats = await supabaseGetWaitlistStats();
+      return NextResponse.json({
+        success: true,
+        stats,
+      });
+    }
+
     const db = getDb();
     const countRow = db.prepare('SELECT COUNT(*) as total FROM waitlist').get() as { total: number };
     const roleStats = db.prepare('SELECT role, COUNT(*) as count FROM waitlist GROUP BY role').all();
