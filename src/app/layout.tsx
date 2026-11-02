@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { AuthProvider } from '@/components/AuthProvider';
 import './globals.css';
 
 export const viewport: Viewport = {
@@ -42,7 +43,9 @@ export default function RootLayout({
         className="bg-[#FBF9F5] text-[#111112] antialiased selection:bg-[#B89248]/20 selection:text-[#111112] min-h-[100dvh]"
         style={{ fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif' }}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

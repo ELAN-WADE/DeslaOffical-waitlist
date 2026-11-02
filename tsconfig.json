@@ -39,6 +39,7 @@
     "node_modules",
     "dist",
     "AI-beauty-Commerce-web-app-main",
+    "supabase",
     "**/*.bak"
   ]
 }

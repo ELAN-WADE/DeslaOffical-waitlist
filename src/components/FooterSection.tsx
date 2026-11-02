@@ -28,7 +28,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onJoinClick }) => 
               />
             </a>
             <p className="text-xs text-[#9E9A95] max-w-sm leading-relaxed mb-4 font-light">
-              Thoughtful skincare, everyday routines, and beauty community designed and formulated for melanin-rich skin.
+              Thoughtful skincare, everyday routines, and beauty community designed and formulated for Natural skin.
             </p>
             <span className="text-[10px] font-mono text-[#B89248] uppercase tracking-wider block">
               Lagos • London • New York

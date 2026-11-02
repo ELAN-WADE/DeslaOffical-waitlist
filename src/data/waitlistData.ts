@@ -137,11 +137,11 @@ export const CONCIERGE_DEMOS = [
 export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "What is launching?",
-    answer: "Desla! is launching an intentional skincare, body care, and beauty platform specifically formulated for melanin-rich skin. We are introducing our opening collection of barrier-restoring essentials (including our Peptide Bio-Glaze Serum and Barrier Recovery Cream), clear SPF protection with zero white cast, simple 4-step daily routine guidance, and an authentic beauty community."
+    answer: "Desla! is launching an intentional skincare, body care, and beauty platform specifically formulated to keep your skin glowing and healthy We are introducing our safe haven collection, comprising of our body oil, body butter, body oil, body wash, face cleanser, body scrub, and other bodycare items. We can't wait to have you in the community."
   },
   {
     question: "Who can join the waitlist?",
-    answer: "Anyone who cares about healthy, melanin-rich skin! Our waitlist welcomes individual beauty shoppers looking for thoughtful everyday care, beauty creators interested in future collaborative storytelling and PR previews, and boutique distributors/retailers interested in stocking Desla!."
+    answer: "Anyone who cares about healthy, Natural skin! Our waitlist welcomes individual beauty shoppers looking for thoughtful everyday care, beauty creators interested in future collaborative storytelling and PR previews, and boutique distributors/retailers interested in stocking Desla!."
   },
   {
     question: "Does joining the waitlist cost anything?",

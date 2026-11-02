@@ -22,7 +22,7 @@ const PRINCIPLES = [
   {
     title: 'Collective Radiance',
     tagline: 'Shared Representation',
-    description: 'Thoughtfully formulated for all skin depths. Celebrating natural textures, authentic tones, and shared everyday radiance.',
+    description: 'Thoughtfully formulated for all skin type. Celebrating natural textures, authentic tones, and shared everyday radiance.',
     image: '/images/desla-studio-trio.jpg',
     imageAlt: 'Models celebrating Desla Safe Haven clean formulations',
     objectPosition: 'center 22%',
