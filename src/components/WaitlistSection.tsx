@@ -305,7 +305,7 @@ export const WaitlistSection: React.FC<WaitlistSectionProps> = ({ activeRole = '
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
                       <label htmlFor="waitlist-name" className="text-xs font-medium text-[#111112]">
-                        First name
+                        Full Name
                       </label>
                       <span className="text-[11px] text-[#9E9A95]">Optional</span>
                     </div>
